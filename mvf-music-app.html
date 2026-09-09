@@ -1,0 +1,2789 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MVF Music">
+<meta name="theme-color" content="#070f1e">
+<title>MVF Music</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="/icons/icon-512.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+button{font-family:inherit;cursor:pointer;background:none;border:none}
+input{font-family:inherit}
+
+:root{
+  --bg:      #070f1e;
+  --sf0:     #0a1628;
+  --sf1:     #0d2240;
+  --sf2:     #0d3f6e;
+  --border:  rgba(24,124,245,.12);
+  --bhi:     rgba(24,124,245,.3);
+  --accent:  #187cf5;
+  --acc-lo:  rgba(24,124,245,.15);
+  --sky:     #89caef;
+  --t1:      #dceefb;
+  --t2:      #7aaec8;
+  --t3:      #3d6b8e;
+  --topbar:  58px;
+  --player:  64px;
+  --nav:     60px;
+  --r:       14px;
+  --rs:      10px;
+}
+
+html,body{
+  height:100%;
+  background:#000;
+  color:var(--t1);
+  font-family:'Plus Jakarta Sans',system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  overflow:hidden;
+}
+
+/* APP SHELL — phone frame */
+.app{
+  height:100dvh;
+  max-width:430px;
+  margin:0 auto;
+  display:flex;
+  flex-direction:column;
+  background:var(--bg);
+  position:relative;
+  overflow:hidden;
+}
+
+/* ── TOPBAR ── */
+.topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 18px;
+  background:var(--bg);
+  border-bottom:1px solid var(--border);
+  z-index:10;
+  height:var(--topbar);
+  flex-shrink:0;
+}
+.topbar-logo svg{
+  width:130px;
+  height:auto;
+  display:block;
+}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.icon-btn{
+  width:38px;height:38px;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:50%;color:var(--t2);
+  transition:background .13s,color .13s;
+}
+.icon-btn:hover{background:var(--acc-lo);color:var(--t1)}
+.avatar{
+  width:34px;height:34px;border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),var(--sky));
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;color:#fff;
+  cursor:pointer;user-select:none;flex-shrink:0;
+}
+
+/* ── MAIN (scrollable) ── */
+.main{
+  flex:1;
+  overflow-y:auto;
+  overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+  min-height:0;
+}
+.main::-webkit-scrollbar{display:none}
+
+.scroll-content{padding:16px 16px 28px;display:flex;flex-direction:column;gap:24px}
+
+/* ── HERO ── */
+.hero{
+  background:linear-gradient(160deg,#0d3160 0%,#0a2550 50%,#071828 100%);
+  border-radius:var(--r);
+  padding:20px;
+  border:1px solid rgba(24,124,245,.2);
+  position:relative;
+  overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;
+  top:-60px;right:-60px;
+  width:250px;height:250px;border-radius:50%;
+  background:radial-gradient(circle,rgba(24,124,245,.2) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero-inner{
+  display:grid;
+  grid-template-columns:1fr 110px;
+  gap:14px;
+  align-items:center;
+  position:relative;z-index:1;
+}
+.hero-eyebrow{
+  font-size:9.5px;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--sky);margin-bottom:8px;
+}
+.hero-title{
+  font-family:'Syne',sans-serif;
+  font-size:20px;font-weight:800;line-height:1.15;
+  text-wrap:balance;margin-bottom:6px;
+}
+.hero-sub{font-size:11.5px;color:var(--t2);margin-bottom:16px;line-height:1.5}
+.hero-btns{display:flex;gap:8px;flex-wrap:wrap}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--accent);color:#fff;
+  border-radius:40px;padding:9px 18px;
+  font-size:12.5px;font-weight:600;
+  transition:background .13s,transform .1s;
+}
+.btn-primary:hover{background:#2d8ff7;transform:scale(1.02)}
+.btn-ghost{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,.08);color:var(--t1);
+  border-radius:40px;padding:9px 14px;
+  font-size:12.5px;font-weight:500;
+  transition:background .13s;
+}
+.btn-ghost:hover{background:rgba(255,255,255,.14)}
+.hero-art{
+  width:110px;height:110px;
+  border-radius:12px;overflow:hidden;
+}
+.hero-art canvas{width:100%;height:100%;display:block}
+/* ── HERO CAROUSEL ── */
+.hero-carousel{border-radius:var(--r);overflow:hidden}
+.hero-slide{display:none;padding:20px;position:relative;overflow:hidden}
+.hero-slide::before{content:'';position:absolute;top:-60px;right:-60px;width:250px;height:250px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.13) 0%,transparent 70%);pointer-events:none}
+.hero-slide.active{display:block;animation:hfade .4s ease}
+@keyframes hfade{from{opacity:0}to{opacity:1}}
+.hero-dots{display:flex;justify-content:center;gap:5px;padding:8px 0 2px}
+.hero-dot{width:6px;height:6px;border-radius:3px;background:rgba(255,255,255,.18);border:none;cursor:pointer;padding:0;transition:all .25s;flex-shrink:0}
+.hero-dot.active{width:18px}
+
+/* ── SECTION HEAD ── */
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:13px}
+.sec-title{font-family:'Syne',sans-serif;font-size:17px;font-weight:700;color:var(--t1)}
+.sec-more{font-size:11.5px;font-weight:600;color:var(--accent);letter-spacing:.03em;transition:color .13s}
+.sec-more:hover{color:var(--sky)}
+
+/* ── RADIO GRID ── */
+.radio-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.radio-card{
+  background:var(--sf1);border:1px solid var(--border);
+  border-radius:var(--r);padding:14px;
+  cursor:pointer;transition:border-color .18s,background .18s,transform .18s;
+  position:relative;overflow:hidden;
+}
+.radio-card:active{transform:scale(.97)}
+.radio-card:hover{border-color:var(--bhi);background:rgba(13,50,96,.6)}
+.radio-card.active{border-color:var(--accent);background:var(--acc-lo)}
+
+.live-dot{
+  position:absolute;top:10px;right:10px;
+  display:flex;align-items:center;gap:4px;
+  background:rgba(220,38,38,.15);border:1px solid rgba(220,38,38,.3);
+  border-radius:20px;padding:2px 7px 2px 5px;
+}
+.live-dot::before{
+  content:'';width:5px;height:5px;border-radius:50%;
+  background:#ef4444;animation:pulse 1.4s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.live-dot span{font-size:8px;font-weight:700;letter-spacing:.08em;color:#ef4444}
+
+.radio-mark{
+  width:40px;height:40px;border-radius:9px;
+  margin-bottom:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Syne',sans-serif;font-size:10px;font-weight:800;
+  color:#fff;letter-spacing:-.01em;overflow:hidden;
+}
+.radio-mark img{width:100%;height:100%;object-fit:contain;padding:4px;box-sizing:border-box}
+.radio-name{
+  font-family:'Syne',sans-serif;font-size:13px;font-weight:700;
+  margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.radio-genre{font-size:11px;color:var(--t2);margin-bottom:8px}
+.radio-freq{font-size:10px;color:var(--t3);font-variant-numeric:tabular-nums}
+
+.wave-bars{display:flex;align-items:flex-end;gap:2px;height:14px;margin-top:8px}
+.wave-bar{width:2px;background:var(--accent);border-radius:1px;height:2px;opacity:.3;transition:opacity .18s}
+.radio-card.active .wave-bar{opacity:.85}
+@keyframes wv{0%,100%{height:2px}50%{height:11px}}
+.radio-card.active .wave-bar:nth-child(1){animation:wv .7s ease-in-out infinite 0s}
+.radio-card.active .wave-bar:nth-child(2){animation:wv .7s ease-in-out infinite .1s}
+.radio-card.active .wave-bar:nth-child(3){animation:wv .7s ease-in-out infinite .17s}
+.radio-card.active .wave-bar:nth-child(4){animation:wv .7s ease-in-out infinite .06s}
+.radio-card.active .wave-bar:nth-child(5){animation:wv .7s ease-in-out infinite .22s}
+.radio-card.active .wave-bar:nth-child(6){animation:wv .7s ease-in-out infinite .13s}
+.radio-card.active .wave-bar:nth-child(7){animation:wv .7s ease-in-out infinite .09s}
+.radio-card.active .wave-bar:nth-child(8){animation:wv .7s ease-in-out infinite .18s}
+@media(prefers-reduced-motion:reduce){.wave-bar{animation:none!important;height:6px!important}}
+
+/* ── TRACKS ── */
+.tracks-list{display:flex;flex-direction:column;gap:2px}
+.track-row{
+  display:grid;grid-template-columns:22px 44px 1fr 36px;
+  gap:11px;align-items:center;
+  padding:9px 8px;border-radius:var(--rs);
+  cursor:pointer;transition:background .13s;
+  min-height:52px;
+}
+.track-row:active{background:var(--sf1)}
+.track-row:hover{background:var(--sf1)}
+.track-row.playing{background:var(--acc-lo)}
+.track-num{font-size:12px;color:var(--t3);text-align:center;font-variant-numeric:tabular-nums;font-weight:500}
+.track-row.playing .track-num{color:var(--accent)}
+.track-thumb{width:44px;height:44px;border-radius:7px;overflow:hidden}
+.track-thumb img{width:100%;height:100%;display:block}
+.track-info{min-width:0}
+.track-title{font-size:13px;font-weight:600;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px}
+.track-row.playing .track-title{color:var(--accent)}
+.track-artist{font-size:11.5px;color:var(--t2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.track-dur{font-size:12px;color:var(--t3);text-align:right;font-variant-numeric:tabular-nums}
+
+/* ── RADIO SHEET ── */
+.rs-backdrop{
+  position:absolute;inset:0;
+  background:rgba(0,0,0,.55);
+  z-index:199;opacity:0;pointer-events:none;
+  transition:opacity .3s;
+}
+.rs-backdrop.show{opacity:1;pointer-events:all}
+.radio-sheet{
+  position:absolute;bottom:0;left:0;right:0;
+  transform:translateY(100%);
+  background:var(--sf0);
+  border-radius:20px 20px 0 0;
+  border-top:1px solid var(--border);
+  z-index:200;
+  max-height:82%;
+  display:flex;flex-direction:column;
+  transition:transform .35s cubic-bezier(.32,.72,0,1);
+}
+.radio-sheet.open{transform:translateY(0)}
+.rs-handle{width:36px;height:4px;background:var(--sf2);border-radius:2px;margin:12px auto 0;flex-shrink:0}
+.rs-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 18px 12px;
+  border-bottom:1px solid var(--border);flex-shrink:0;
+}
+.rs-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--t1)}
+.rs-close{
+  width:30px;height:30px;border-radius:50%;
+  background:var(--sf1);color:var(--t2);
+  display:flex;align-items:center;justify-content:center;font-size:16px;
+}
+.rs-list{overflow-y:auto;flex:1;padding:6px 0 20px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.rs-list::-webkit-scrollbar{display:none}
+.rs-item{
+  display:flex;align-items:center;gap:13px;
+  padding:11px 18px;cursor:pointer;
+  transition:background .13s;
+}
+.rs-item:active{background:var(--sf1)}
+.rs-item.active{background:var(--acc-lo)}
+.rs-mark{
+  width:42px;height:42px;border-radius:10px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Syne',sans-serif;font-size:10px;font-weight:800;color:#fff;overflow:hidden;
+}
+.rs-info{flex:1;min-width:0}
+.rs-name{font-size:13px;font-weight:600;color:var(--t1);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rs-sub{font-size:11px;color:var(--t2)}
+.rs-badge{
+  font-size:8px;font-weight:700;letter-spacing:.08em;color:#ef4444;
+  background:rgba(220,38,38,.15);border:1px solid rgba(220,38,38,.3);
+  border-radius:20px;padding:2px 7px;flex-shrink:0;
+}
+
+/* ── LIVE RADIO MODE ── */
+.mini-player.live .mini-prog{opacity:0}
+.mini-live-tag{
+  display:none;font-size:9px;font-weight:700;letter-spacing:.08em;
+  color:#ef4444;background:rgba(220,38,38,.15);
+  border:1px solid rgba(220,38,38,.3);border-radius:20px;
+  padding:1px 6px;margin-left:5px;vertical-align:middle;flex-shrink:0;
+}
+.mini-player.live .mini-live-tag{display:inline-block}
+.fp-live-row{
+  display:none;align-items:center;justify-content:center;gap:7px;
+  font-size:11px;color:var(--t3);padding:8px 0;
+}
+.full-player.live .fp-live-row{display:flex}
+.full-player.live .fp-prog-wrap{display:none}
+.fp-live-dot{width:7px;height:7px;border-radius:50%;background:#ef4444;animation:pulse 1.4s ease-in-out infinite}
+.fp-live-text{font-size:12px;font-weight:700;letter-spacing:.1em;color:#ef4444}
+
+/* ── MINI PLAYER ── */
+.mini-player{
+  background:var(--sf0);
+  border-top:1px solid var(--border);
+  display:flex;align-items:center;
+  padding:0 14px;gap:11px;
+  cursor:pointer;
+  position:relative;z-index:45;
+  height:var(--player);
+  flex-shrink:0;
+}
+.mini-prog{
+  position:absolute;top:0;left:0;right:0;height:2px;
+  background:var(--sf2);
+}
+.mini-prog-fill{
+  height:100%;background:var(--accent);
+  border-radius:0 1px 1px 0;
+  transition:width .1s linear;
+}
+.mini-art{
+  width:44px;height:44px;border-radius:8px;overflow:hidden;flex-shrink:0;
+}
+.mini-art canvas{width:100%;height:100%;display:block}
+.mini-info{flex:1;min-width:0}
+.mini-title{
+  font-size:13px;font-weight:600;color:var(--t1);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px;
+}
+.mini-artist{
+  font-size:11.5px;color:var(--t2);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.mini-btns{display:flex;align-items:center;gap:4px;flex-shrink:0}
+.mini-heart{color:var(--accent);padding:8px;opacity:.8;transition:opacity .13s}
+.mini-heart:hover{opacity:1}
+.mini-play{
+  width:36px;height:36px;border-radius:50%;
+  background:var(--accent);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .13s,transform .1s;
+}
+.mini-play:hover{background:#2d8ff7}
+.mini-play:active{transform:scale(.93)}
+
+/* ── BOTTOM NAV ── */
+.bottom-nav{
+  background:var(--sf0);border-top:1px solid var(--border);
+  display:flex;align-items:stretch;
+  position:relative;z-index:50;
+  height:var(--nav);
+  flex-shrink:0;
+}
+.nav-tab{
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:4px;padding:6px 4px;
+  color:var(--t3);font-size:10px;font-weight:600;
+  letter-spacing:.02em;transition:color .13s;
+}
+.nav-tab:hover{color:var(--t2)}
+.nav-tab.active{color:var(--accent)}
+.nav-tab svg{flex-shrink:0}
+
+/* ── FULL PLAYER ── */
+.full-player{
+  position:absolute;inset:0;
+  background:linear-gradient(180deg,#0d3160 0%,#070f1e 60%);
+  z-index:300;
+  display:flex;flex-direction:column;align-items:center;
+  padding:0 24px 20px;
+  transform:translateY(100%);
+  transition:transform .42s cubic-bezier(.32,.72,0,1);
+  will-change:transform;
+  overflow-y:auto;
+  scrollbar-width:none;
+}
+.full-player::-webkit-scrollbar{display:none}
+.full-player.open{transform:translateY(0)}
+
+.fp-handle{
+  width:36px;height:4px;border-radius:2px;
+  background:rgba(255,255,255,.2);
+  margin-top:12px;margin-bottom:4px;flex-shrink:0;
+}
+.fp-top{
+  width:100%;display:flex;align-items:center;justify-content:space-between;
+  padding:8px 0 16px;flex-shrink:0;
+}
+.fp-close{
+  color:var(--t2);padding:6px;border-radius:50%;
+  transition:color .13s;display:flex;align-items:center;
+}
+.fp-close:hover{color:var(--t1)}
+.fp-label{
+  font-size:11px;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--t3);
+}
+
+.fp-art{
+  width:220px;height:220px;border-radius:50%;overflow:hidden;
+  box-shadow:0 20px 60px rgba(24,124,245,.35);
+  flex-shrink:0;margin-bottom:28px;
+  border:3px solid rgba(137,202,239,.15);
+}
+.fp-art canvas{width:100%;height:100%;display:block}
+
+.fp-info{
+  width:100%;display:flex;align-items:center;
+  justify-content:space-between;margin-bottom:20px;flex-shrink:0;
+}
+.fp-title{
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:600;
+  color:var(--t1);margin-bottom:4px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+  overflow:hidden;line-height:1.35;letter-spacing:.01em;
+}
+.fp-artist{font-size:13.5px;color:var(--t2)}
+.fp-heart{color:var(--accent);padding:8px;opacity:.8;transition:opacity .13s,transform .13s}
+.fp-heart:hover{opacity:1;transform:scale(1.15)}
+.fp-heart.liked{opacity:1}
+
+.fp-prog-wrap{width:100%;margin-bottom:6px;flex-shrink:0}
+.fp-prog-track{
+  width:100%;height:4px;background:var(--sf2);
+  border-radius:2px;cursor:pointer;margin-bottom:6px;
+}
+.fp-prog-fill{height:100%;background:var(--accent);border-radius:2px;pointer-events:none}
+.fp-times{display:flex;justify-content:space-between}
+.fp-time{font-size:11px;color:var(--t3);font-variant-numeric:tabular-nums}
+
+.fp-controls{
+  display:flex;align-items:center;justify-content:space-between;
+  width:100%;padding:0 4px;margin:12px 0;flex-shrink:0;
+}
+.fp-ctrl{color:var(--t2);padding:8px;border-radius:50%;transition:color .13s}
+.fp-ctrl:hover{color:var(--t1)}
+.fp-ctrl.on{color:var(--accent)}
+
+.fp-play-btn{
+  width:58px;height:58px;border-radius:50%;
+  background:var(--accent);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .13s,transform .1s;
+  box-shadow:0 8px 24px rgba(24,124,245,.4);
+}
+.fp-play-btn:hover{background:#2d8ff7}
+.fp-play-btn:active{transform:scale(.94)}
+
+.fp-vol{display:flex;align-items:center;gap:10px;width:100%;flex-shrink:0}
+.fp-vol-track{
+  flex:1;height:12px;background:var(--sf2);
+  border-radius:6px;cursor:pointer;position:relative;
+}
+.fp-vol-fill{height:100%;background:var(--accent);border-radius:6px}
+
+/* ── EQUALIZER BARS ── */
+.fp-eq{
+  display:flex;align-items:flex-end;justify-content:center;
+  gap:3px;height:32px;width:100%;margin:20px 0 4px;flex-shrink:0;
+}
+.fp-eq-bar{
+  width:3px;border-radius:2px;
+  background:linear-gradient(to top,var(--accent),var(--sky));
+  height:4px;opacity:0.35;
+  transition:height .1s;
+}
+.full-player.playing .fp-eq-bar{
+  animation:eq-bounce var(--d,.6s) ease-in-out infinite alternate;
+  opacity:0.7;
+}
+@keyframes eq-bounce{
+  from{height:4px}
+  to{height:var(--h,20px)}
+}
+
+/* ── FULL PLAYER BOTTOM LOGO ── */
+.fp-logo{
+  margin-top:10px;margin-bottom:6px;
+  opacity:0.22;flex-shrink:0;
+}
+.fp-logo svg{width:100px;height:auto;display:block}
+
+/* ── Biblioteca sections ── */
+.lib-section-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--t3);letter-spacing:.06em;text-transform:uppercase;margin:16px 0 10px}
+.lib-section-title:first-child{margin-top:0}
+.pl-card{
+  display:flex;align-items:center;gap:12px;
+  padding:11px 10px;border-radius:var(--rs);cursor:pointer;
+  transition:background .13s;border:1px solid var(--border);
+  margin-bottom:8px;
+}
+.pl-card:hover,.pl-card:active{background:var(--sf1)}
+.pl-cover{
+  width:44px;height:44px;border-radius:8px;
+  background:linear-gradient(135deg,var(--accent),#0d3f6e);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;font-size:20px;
+}
+.pl-info{flex:1;min-width:0}
+.pl-name{font-size:14px;font-weight:600;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pl-meta{font-size:12px;color:var(--t3)}
+.pl-del{color:var(--t3);padding:6px;transition:color .13s}
+.pl-del:hover{color:#ef4444}
+.new-pl-btn{
+  width:100%;padding:11px;border-radius:var(--rs);
+  background:var(--sf1);border:1px dashed var(--border);
+  font-size:13px;color:var(--t2);font-weight:600;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  cursor:pointer;transition:border-color .15s,color .15s;margin-bottom:4px;
+}
+.new-pl-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ── Playlist modal ── */
+.pl-modal{
+  position:absolute;inset:0;z-index:500;
+  background:rgba(0,0,0,.55);
+  display:flex;align-items:flex-end;
+  opacity:0;pointer-events:none;transition:opacity .2s;
+}
+.pl-modal.open{opacity:1;pointer-events:all}
+.pl-sheet{
+  background:var(--sf0);border-radius:18px 18px 0 0;
+  padding:20px 16px 36px;width:100%;
+  transform:translateY(100%);transition:transform .25s cubic-bezier(.4,0,.2,1);
+  border-top:1px solid var(--border);
+}
+.pl-modal.open .pl-sheet{transform:translateY(0)}
+.pl-sheet-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.pl-sheet-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--t1)}
+.pl-sheet-close{color:var(--t3);padding:4px}
+.pl-list-item{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 8px;border-radius:var(--rs);cursor:pointer;
+  transition:background .13s;
+}
+.pl-list-item:hover,.pl-list-item:active{background:var(--sf1)}
+.pl-list-cover{
+  width:40px;height:40px;border-radius:8px;
+  background:linear-gradient(135deg,var(--accent),#0d3f6e);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;font-size:18px;
+}
+.pl-list-name{font-size:13px;font-weight:600;color:var(--t1)}
+.pl-list-count{font-size:11px;color:var(--t3)}
+.pl-create-row{
+  display:flex;gap:8px;margin-top:14px;padding-top:14px;
+  border-top:1px solid var(--border);
+}
+.pl-create-input{
+  flex:1;background:var(--sf1);border:1px solid var(--border);
+  border-radius:var(--rs);color:var(--t1);font-size:13px;
+  padding:9px 12px;outline:none;font-family:inherit;
+}
+.pl-create-input:focus{border-color:var(--accent)}
+.pl-create-input::placeholder{color:var(--t3)}
+.pl-create-btn{
+  padding:9px 14px;border-radius:var(--rs);
+  background:var(--accent);color:#fff;font-size:13px;font-weight:600;
+  white-space:nowrap;flex-shrink:0;
+}
+.fp-pl-btn{color:var(--t3);padding:8px;opacity:.8;transition:opacity .13s,color .13s}
+.fp-pl-btn:hover{opacity:1;color:var(--accent)}
+
+/* ── Mini player hidden until first play ── */
+.app.noplayer .mini-player { display: none; }
+
+/* ── Search suggestions ── */
+.search-suggestions { padding: 18px 0 6px; }
+.sugg-label { font-size: 11px; color: var(--t3); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 10px; }
+.sugg-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.sugg-chip {
+  padding: 7px 15px; border-radius: 20px;
+  background: var(--sf1); border: 1px solid var(--border);
+  font-size: 13px; color: var(--t2); cursor: pointer;
+  transition: background .15s, color .15s, border-color .15s;
+}
+.sugg-chip:hover, .sugg-chip:active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+/* ── YouTube Player ── */
+.fp-yt-wrap{
+  width:100%;max-width:300px;aspect-ratio:16/9;
+  border-radius:var(--r);overflow:hidden;
+  display:none;flex-shrink:0;margin:0 auto;background:#000;
+}
+.fp-yt-wrap iframe{width:100%;height:100%;border:0}
+.full-player.yt-mode .fp-art{display:none}
+.full-player.yt-mode .fp-yt-wrap{display:block;margin-bottom:18px}
+.yt-result{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer;
+}
+.yt-result:active{opacity:.7}
+.yt-thumb{width:72px;height:48px;border-radius:6px;object-fit:cover;flex-shrink:0;background:var(--sf0)}
+.yt-info{flex:1;min-width:0}
+.yt-title{font-size:13px;font-weight:600;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.yt-channel{font-size:11px;color:var(--t3);margin-top:2px}
+.api-key-wrap{
+  display:flex;flex-direction:column;gap:8px;
+  padding:16px;background:var(--sf0);border-radius:var(--r);margin:12px 0;
+}
+.api-key-label{font-size:12px;font-weight:700;color:var(--t2);letter-spacing:.05em;text-transform:uppercase}
+.api-key-input{
+  background:var(--bg);border:1px solid var(--border);border-radius:var(--rs);
+  padding:10px 12px;color:var(--t1);font-size:13px;width:100%;box-sizing:border-box;
+}
+.api-key-save{
+  background:var(--accent);color:#fff;border-radius:var(--rs);
+  padding:10px;font-size:13px;font-weight:700;width:100%;cursor:pointer;
+}
+.api-key-save:active{opacity:.8}
+.api-key-ok{font-size:11px;color:#22c55e;margin-top:2px}
+.api-key-hint{font-size:11px;color:var(--t3);line-height:1.5}
+.yt-warn{
+  padding:12px;background:rgba(255,200,0,.08);border:1px solid rgba(255,200,0,.25);
+  border-radius:var(--rs);margin-bottom:8px;font-size:12px;color:var(--t2);line-height:1.5;
+}
+.lib-empty{padding:40px 0;text-align:center}
+.lib-empty .ph-icon{font-size:40px}
+.lib-empty .ph-title{font-size:16px;font-weight:700;color:var(--t2);margin:6px 0}
+.lib-empty .ph-sub{font-size:13px;color:var(--t3)}
+/* terms / about */
+.terms-block{background:var(--sf1);border:1px solid var(--border);border-radius:14px;margin-bottom:10px;overflow:hidden}
+.terms-head{display:flex;align-items:center;justify-content:space-between;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--accent);padding:13px 14px;cursor:pointer;user-select:none}
+.terms-head .terms-arrow{font-size:12px;transition:transform .25s;color:var(--t3)}
+.terms-block.open .terms-head .terms-arrow{transform:rotate(180deg)}
+.terms-body{max-height:0;overflow:hidden;transition:max-height .3s ease,padding .3s ease;padding:0 14px;font-size:12.5px;color:var(--t2);line-height:1.65}
+.terms-block.open .terms-body{max-height:600px;padding:0 14px 14px}
+.terms-body p{margin:0 0 7px}.terms-body p:last-child{margin:0}
+.terms-body strong{color:var(--t1)}
+/* ── iOS Install Banner ── */
+.ios-install-banner{
+  position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+  width:100%;max-width:430px;
+  background:linear-gradient(135deg,#0d2240,#0a1628);
+  border-top:1px solid var(--bhi);
+  padding:14px 16px 28px;
+  z-index:9999;
+  display:flex;align-items:flex-start;gap:12px;
+  box-shadow:0 -8px 32px rgba(0,0,0,.55);
+  transition:transform .35s cubic-bezier(.32,.72,0,1),opacity .3s;
+}
+.ios-install-banner.hidden{transform:translate(-50%,110%);opacity:0;pointer-events:none}
+.ios-banner-icon{width:52px;height:52px;border-radius:12px;overflow:hidden;flex-shrink:0}
+.ios-banner-icon img{width:100%;height:100%;display:block}
+.ios-banner-body{flex:1;min-width:0}
+.ios-banner-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--t1);margin-bottom:4px}
+.ios-banner-sub{font-size:12px;color:var(--t2);line-height:1.55}
+.ios-banner-sub svg{display:inline;vertical-align:middle;margin:0 2px}
+.ios-banner-close{
+  color:var(--t3);flex-shrink:0;padding:4px;border-radius:50%;
+  width:26px;height:26px;display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.08);font-size:14px;line-height:1;
+}
+.ios-banner-arrow{
+  position:absolute;bottom:8px;left:50%;transform:translateX(-50%);
+  width:0;height:0;
+  border-left:8px solid transparent;border-right:8px solid transparent;
+  border-top:8px solid var(--bhi);
+}
+
+/* dev area slide */
+.dev-area{overflow:hidden;max-height:0;opacity:0;transition:max-height .3s ease,opacity .25s ease}
+.dev-area.open{max-height:400px;opacity:1}
+.lib-del{background:none;border:none;color:var(--t3);cursor:pointer;padding:6px;flex-shrink:0}
+.lib-del:active{color:#ef4444}
+
+/* ── TAB SHEET ── */
+.tab-sheet{
+  position:absolute;inset:0;
+  background:var(--bg);
+  z-index:250;
+  display:flex;flex-direction:column;
+  transform:translateX(100%);
+  transition:transform .35s cubic-bezier(.32,.72,0,1);
+}
+.tab-sheet.open{transform:translateX(0)}
+.tab-sheet-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 18px;
+  border-bottom:1px solid var(--border);
+  flex-shrink:0;
+}
+.tab-sheet-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--t1)}
+.tab-sheet-body{flex:1;overflow-y:auto;padding:16px;scrollbar-width:none}
+.tab-sheet-body::-webkit-scrollbar{display:none}
+
+/* search inside tab */
+.search-input-wrap{
+  display:flex;align-items:center;gap:10px;
+  background:var(--sf1);border:1px solid var(--border);
+  border-radius:12px;padding:10px 14px;margin-bottom:16px;
+}
+.search-input-wrap input{
+  flex:1;background:none;border:none;outline:none;
+  font-size:15px;color:var(--t1);font-family:inherit;
+}
+.search-input-wrap input::placeholder{color:var(--t3)}
+.search-input-wrap svg{flex-shrink:0;color:var(--t3)}
+.search-results .track-row{border-radius:var(--rs)}
+
+/* placeholder pages */
+.ph-center{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:14px;padding:60px 24px;text-align:center;
+}
+.ph-icon{font-size:52px;opacity:.4}
+.ph-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;color:var(--t1)}
+.ph-sub{font-size:13.5px;color:var(--t3);line-height:1.5;max-width:220px}
+.ph-badge{
+  font-size:11px;font-weight:700;letter-spacing:.08em;
+  background:var(--acc-lo);color:var(--accent);
+  border:1px solid rgba(24,124,245,.3);border-radius:20px;
+  padding:4px 12px;
+}
+</style>
+
+<div class="app noplayer" id="appShell">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="topbar-logo">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 556.62 222.5">
+        <defs>
+          <style>.tb-8{fill:#fff}.tb-6{fill:#89caef}</style>
+          <linearGradient id="tb-g1" x1="207" y1="190.23" x2="209.46" y2="190.23" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#89caef"/><stop offset=".21" stop-color="#61aef1"/>
+            <stop offset=".43" stop-color="#4198f2"/><stop offset=".64" stop-color="#2a88f4"/>
+            <stop offset=".83" stop-color="#1c7ff4"/><stop offset="1" stop-color="#187cf5"/>
+          </linearGradient>
+          <linearGradient id="tb-g2" x1="212.16" y1="190.22" x2="226.03" y2="190.22" xlink:href="#tb-g1"/>
+          <linearGradient id="tb-g3" x1="343.44" y1="190.24" x2="346.01" y2="190.24" gradientTransform="translate(534.51 -154.74) rotate(89.92)" xlink:href="#tb-g1"/>
+          <linearGradient id="tb-g4" x1="327.18" y1="190.26" x2="341.02" y2="190.26" xlink:href="#tb-g1"/>
+          <linearGradient id="tb-g5" x1="251.54" y1="190.8" x2="306.18" y2="190.8" xlink:href="#tb-g1"/>
+          <linearGradient id="tb-g6" x1="135.92" y1="140.79" x2="420.01" y2="140.79" xlink:href="#tb-g1"/>
+          <linearGradient id="tb-g7" x1="155.98" y1="190.26" x2="172.6" y2="190.26" xlink:href="#tb-g1"/>
+          <linearGradient id="tb-g8" x1="386.97" y1="191.33" x2="399.73" y2="191.33" xlink:href="#tb-g1"/>
+          <linearGradient id="tb-g9" x1="378.58" y1="189.27" x2="391.24" y2="189.27" xlink:href="#tb-g1"/>
+        </defs>
+        <path class="tb-8" d="M6.98,66.01c0-10.34-.32-19.41-.64-26.57h24.03l1.11,9.71h.64c2.86-3.82,9.71-11.46,23.07-11.46,10.02,0,17.82,4.61,21.16,12.41h.32c3.18-3.98,6.68-7.16,10.82-9.23,3.98-2.07,8.59-3.18,13.84-3.18,16.87,0,26.57,12.25,26.57,33.89v46.15h-27.85v-41.85c0-9.71-2.86-15.28-9.23-15.28-4.61,0-7.48,3.02-8.75,6.68-.64,1.59-.8,4.14-.8,5.73v44.71h-27.85v-42.64c0-8.75-2.71-14.48-9.07-14.48-5.25,0-7.64,3.82-8.75,6.52-.8,1.75-.8,3.82-.8,5.73v44.87H6.98v-51.71Z"/>
+        <path class="tb-8" d="M167.21,39.44l8.43,33.26c1.59,6.21,2.7,12.25,3.66,18.46h.48c.95-6.36,1.91-11.93,3.5-18.46l7.8-33.26h30.07l-28.48,78.29h-28.8l-27.85-78.29h31.19Z"/>
+        <path class="tb-8" d="M240.88,117.73v-57.28h-10.02v-21h10.02v-2.71c0-8.59,3.02-19.25,10.18-25.62,6.52-6.05,15.43-8.12,22.75-8.12,5.41,0,9.55.48,13.21,1.43l-.64,21.96c-2.07-.64-4.46-.96-7.32-.96-6.21,0-9.71,4.46-9.71,10.18v3.82h14.32v21h-14v57.28h-28.8Z"/>
+        <path class="tb-6" d="M358.04,117.67h-5.15v-29.9c0-6.8-1.05-11.82-3.14-15.05-2.1-3.23-5.31-4.85-9.64-4.85-2.2,0-4.3.41-6.29,1.24-1.99.82-3.81,1.98-5.46,3.45-1.65,1.48-3.08,3.23-4.28,5.26-1.2,2.03-2.15,4.28-2.84,6.75v33.09h-5.15v-29.9c0-6.87-1.03-11.91-3.09-15.1-2.06-3.2-5.26-4.79-9.59-4.79-2.2,0-4.28.4-6.24,1.19-1.96.79-3.76,1.93-5.41,3.4-1.65,1.48-3.11,3.23-4.38,5.26-1.27,2.03-2.25,4.28-2.94,6.75v33.2h-5.15v-53.61h4.85v12.78c2.2-4.33,5.09-7.7,8.66-10.1,3.57-2.41,7.53-3.61,11.86-3.61s8.21,1.34,11.03,4.02c2.82,2.68,4.5,6.19,5.05,10.52,5.09-9.69,12.1-14.54,21.03-14.54,5.84,0,10.02,2.08,12.53,6.24,2.51,4.16,3.76,9.98,3.76,17.47v30.82Z"/>
+        <path class="tb-6" d="M390.21,118.7c-11.41,0-17.11-7.9-17.11-23.71v-30.93h5.15v30.21c0,13.2,4.5,19.79,13.51,19.79,2.27,0,4.47-.39,6.6-1.19,2.13-.79,4.12-1.89,5.98-3.3,1.86-1.41,3.49-3.11,4.9-5.1,1.41-1.99,2.53-4.19,3.35-6.6v-33.82h5.15v46.39c0,1.72.72,2.58,2.16,2.58v4.64c-.34.07-.65.1-.93.1h-.62c-1.38,0-2.59-.43-3.66-1.29-1.07-.86-1.6-2.01-1.6-3.45v-8.04c-2.34,4.33-5.55,7.7-9.64,10.1-4.09,2.41-8.51,3.61-13.25,3.61Z"/>
+        <path class="tb-6" d="M451.14,118.7c-4.12,0-8.08-.69-11.86-2.06-3.78-1.37-7.08-3.44-9.9-6.19l2.58-3.51c2.89,2.61,5.88,4.54,8.97,5.77,3.09,1.24,6.5,1.86,10.21,1.86,4.67,0,8.44-.98,11.29-2.94,2.85-1.96,4.28-4.69,4.28-8.2,0-1.65-.36-3.04-1.08-4.18-.72-1.13-1.8-2.1-3.25-2.89-1.44-.79-3.23-1.49-5.36-2.11-2.13-.62-4.61-1.27-7.42-1.96-3.03-.69-5.65-1.37-7.89-2.06-2.23-.69-4.07-1.51-5.51-2.47-1.44-.96-2.53-2.13-3.25-3.5-.72-1.37-1.08-3.13-1.08-5.26,0-2.68.51-5.02,1.55-7.01,1.03-1.99,2.46-3.64,4.28-4.95,1.82-1.3,3.92-2.28,6.29-2.94s4.9-.98,7.58-.98c4.19,0,7.9.71,11.13,2.11,3.23,1.41,5.74,3.21,7.53,5.41l-2.89,2.78c-1.79-2.06-4.11-3.61-6.96-4.64-2.85-1.03-5.89-1.55-9.12-1.55-1.99,0-3.87.21-5.62.62-1.75.41-3.28,1.07-4.59,1.96-1.31.89-2.34,2.05-3.09,3.45-.76,1.41-1.13,3.08-1.13,5,0,1.58.26,2.85.77,3.81.52.96,1.34,1.79,2.47,2.47,1.13.69,2.59,1.29,4.38,1.8,1.79.52,3.92,1.08,6.39,1.7,3.37.82,6.36,1.62,8.97,2.37,2.61.76,4.79,1.68,6.55,2.78s3.09,2.41,4.02,3.92c.93,1.51,1.39,3.44,1.39,5.77,0,4.81-1.87,8.64-5.62,11.5-3.75,2.85-8.75,4.28-15,4.28Z"/>
+        <path class="tb-6" d="M483.71,51.9v-9.48h5.15v9.48h-5.15ZM483.71,117.67v-53.61h5.15v53.61h-5.15Z"/>
+        <path class="tb-6" d="M501.34,90.66c0-3.78.65-7.35,1.96-10.72,1.3-3.37,3.13-6.29,5.46-8.76,2.34-2.47,5.12-4.43,8.35-5.88,3.23-1.44,6.77-2.17,10.62-2.17,4.88,0,9.18,1.1,12.89,3.3,3.71,2.2,6.49,5.26,8.35,9.18l-5.05,1.65c-1.58-2.95-3.83-5.27-6.75-6.96-2.92-1.68-6.13-2.53-9.64-2.53-2.96,0-5.71.58-8.25,1.75-2.54,1.17-4.76,2.78-6.65,4.85s-3.39,4.49-4.48,7.27c-1.1,2.78-1.65,5.79-1.65,9.02s.57,6.27,1.7,9.12c1.13,2.85,2.64,5.33,4.54,7.42,1.89,2.1,4.12,3.76,6.7,5,2.58,1.24,5.31,1.86,8.2,1.86,1.86,0,3.69-.27,5.52-.82,1.82-.55,3.51-1.27,5.05-2.17,1.55-.89,2.89-1.94,4.02-3.14,1.13-1.2,1.91-2.46,2.32-3.76l5.05,1.44c-.69,1.86-1.74,3.59-3.14,5.21-1.41,1.62-3.08,3.01-5,4.18-1.93,1.17-4.06,2.08-6.39,2.73-2.34.65-4.74.98-7.22.98-3.78,0-7.29-.74-10.51-2.22-3.23-1.48-6.03-3.51-8.4-6.08-2.37-2.58-4.23-5.55-5.57-8.92-1.34-3.37-2.01-6.98-2.01-10.82Z"/>
+        <rect fill="url(#tb-g1)" x="207" y="179.68" width="2.46" height="21.11"/>
+        <polygon fill="url(#tb-g2)" points="226.03 200.99 212.16 190.25 225.99 179.44 226.03 200.99"/>
+        <rect fill="url(#tb-g3)" x="334.17" y="188.97" width="21.12" height="2.54" transform="translate(154.03 534.71) rotate(-89.92)"/>
+        <polygon fill="url(#tb-g4)" points="341.02 190.22 327.18 201.04 327.18 179.48 341.02 190.22"/>
+        <path fill="url(#tb-g5)" d="M278.86,163.5c-15.09,0-27.32,12.22-27.32,27.3s12.23,27.29,27.32,27.29,27.32-12.22,27.32-27.29-12.23-27.3-27.32-27.3ZM272.82,205.27l-.07-29.85,19.12,14.96-19.05,14.9Z"/>
+        <path fill="url(#tb-g6)" d="M419.92,139.58l-201.38-.11c-.6-2.54-2.7-4.38-4.96-4.72-2.7-.4-5,.73-6.43,3.03l-69.04.02c-1.58,0-2.33,1.59-2.18,2.77.18,1.35,1.21,2.2,2.77,2.2l67.98-.02c1.06,2.79,3.6,4.39,6.44,4.13,2.66-.24,4.86-2.19,5.5-5.18l26.35.29h61.94s112.88.08,112.88.08c.33-.78.2-1.56.13-2.5Z"/>
+        <path fill="url(#tb-g7)" d="M168.64,196.93c-.23.14-.81-.72-.68-.96.15-.27.58-.52,1-1.04-2.27-.25-4.16-.97-5.6-3.17-1.53,2.35-4.34,3.42-7.09,2.81-.36-.1-.2-1.34.27-1.32,1.99.57,5.88-.63,5.8-3.13s-4.04-3.21-5.9-3.23c-.54-.1-.54-.9-.37-1.27,2.71-.18,5.55.65,7.35,3.01,1.45-1.85,3.39-3.02,5.84-3.03-.43-.55-.77-.78-.94-1.06-.16-.27.57-1.14.82-.94l3.45,2.83-3.71,3.08c-.35.07-1.06-.76-.78-1.1.32-.38,1.3-.67,1.28-1.29-1.74-.41-4.94,1.21-4.89,3.19.06,2.27,3.13,3.38,4.97,3.05l-1.34-1.54c-.2-.22.65-1.02.95-.78l3.44,2.79-3.88,3.09Z"/>
+        <path fill="url(#tb-g8)" d="M386.97,196.79l2.98-2.66c.21-.19.62-.43.85-.4.26.03.67.44.71.73.04.25-.44.59-.86.97,3.03.91,6.25-.85,6.96-3.98.71-3.13-1.65-6.22-5.05-6.45-.25-.7-.23-1.35-.02-1.98,4.51.09,7.64,3.99,7.14,8.17-.53,4.44-4.71,7.23-9.27,6.31.11.64.7.76.85.98.25.38-.18.93-.68,1.16l-3.61-2.85Z"/>
+        <path fill="url(#tb-g9)" d="M385.77,195.63c.26.61.19,1.24.09,2-4.33-.02-7.58-3.69-7.26-7.82.34-4.34,4.08-7.29,8.55-6.76.17.02.49-.04.7-.08.68-.12-.87-.72-.95-1.11-.07-.32.28-.73.51-.88.39-.26.67.08.99.37l2.83,2.48-3.25,2.68c-.29.24-.58.39-.85.19-.16-.12-.46-.37-.48-.67s.34-.56.8-.87c-3.02-.69-6.13,1.02-6.75,4.06-.62,3.06,1.53,6.27,5.07,6.4Z"/>
+      </svg>
+    </div>
+    <div class="topbar-right">
+      <button class="icon-btn" aria-label="Buscar" onclick="setTab(document.querySelectorAll('.nav-tab')[2]);openTabSheet('buscar')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="scroll-content">
+
+      <!-- HERO CAROUSEL -->
+      <div class="hero-carousel" id="heroCarousel">
+        <!-- Slide 0: MVF Music -->
+        <div class="hero-slide active" style="background:linear-gradient(160deg,#0d3160 0%,#0a2550 50%,#071828 100%)">
+          <div class="hero-inner">
+            <div>
+              <div class="hero-eyebrow">◈ Destaque da Semana</div>
+              <h1 class="hero-title">Novas Descobertas MVF</h1>
+              <p class="hero-sub">Músicas em alta no Brasil</p>
+              <div class="hero-btns">
+                <button class="btn-primary" id="heroPlayBtn">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                  Ouvir
+                </button>
+                <button class="btn-ghost" id="heroSaveBtn">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                  Salvar
+                </button>
+              </div>
+            </div>
+            <div class="hero-art">
+              <canvas id="heroCanvas" width="220" height="220"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 1: MVF NET -->
+        <div class="hero-slide" style="background:linear-gradient(160deg,#071d3a 0%,#040e1f 80%,#020710 100%)">
+          <div class="hero-inner">
+            <div>
+              <div class="hero-eyebrow" style="color:#5ba8f8">◈ Internet Fibra Óptica</div>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="160 56 340 77" style="width:100%;max-height:52px;display:block;margin:2px 0 4px">
+                <path fill="rgba(255,255,255,.88)" d="M164.36,128.69v-47.22h18.81v47.22h-18.81ZM193.43,128.69v-27.06c0-1.6-.48-2.86-1.44-3.79-.96-.93-2.18-1.39-3.65-1.39-1.02,0-1.94.21-2.74.62-.8.42-1.41,1.01-1.82,1.78-.42.77-.62,1.7-.62,2.78l-7.29-2.69c0-3.84.85-7.13,2.54-9.88,1.69-2.75,3.98-4.86,6.86-6.33,2.88-1.47,6.14-2.21,9.79-2.21,3.2,0,6.09.77,8.69,2.3,2.59,1.54,4.65,3.66,6.19,6.38,1.54,2.72,2.3,5.94,2.3,9.65v29.85h-18.81ZM222.51,128.69v-27.06c0-1.6-.48-2.86-1.44-3.79-.96-.93-2.18-1.39-3.65-1.39-1.02,0-1.94.21-2.74.62-.8.42-1.41,1.01-1.82,1.78-.42.77-.62,1.7-.62,2.78l-11.04.1c0-4.41.88-8.21,2.64-11.37,1.76-3.17,4.21-5.6,7.34-7.29,3.13-1.69,6.72-2.54,10.75-2.54,3.77,0,7.12.8,10.03,2.4,2.91,1.6,5.2,3.9,6.86,6.91,1.66,3.01,2.5,6.62,2.5,10.84v28.02h-18.81Z"/>
+                <path fill="rgba(255,255,255,.88)" d="M260.52,128.69l-18.52-47.22h19.96l10.85,40.21h-6.81l10.75-40.21h19.87l-18.52,47.12-17.56.1Z"/>
+                <path fill="rgba(255,255,255,.88)" d="M299.38,96.83v-15.35h41.36v15.35h-41.36ZM308.98,128.69v-49.14c0-4.09.9-7.82,2.69-11.18,1.79-3.36,4.38-6.05,7.77-8.06,3.39-2.02,7.49-3.02,12.28-3.02,3.58,0,6.77.58,9.55,1.73,2.78,1.15,5.1,2.69,6.96,4.61l-11.61,11.61c-.45-.51-1.02-.88-1.73-1.1-.7-.22-1.44-.34-2.21-.34-1.47,0-2.66.45-3.55,1.34-.9.9-1.34,2.08-1.34,3.55v50h-18.81Z"/>
+                <path fill="#187cf5" d="M396.96,128.69h-4.99v-28.92c0-6.72-.95-11.6-2.84-14.66-1.89-3.06-4.9-4.59-9.03-4.59-2.19,0-4.37.4-6.53,1.2-2.16.8-4.17,1.93-6.03,3.39-1.86,1.46-3.49,3.18-4.89,5.14-1.4,1.96-2.43,4.07-3.09,6.33v32.12h-4.99v-51.86h4.69v12.37c1.06-1.99,2.38-3.81,3.94-5.44,1.56-1.63,3.32-3.02,5.29-4.19,1.96-1.16,4.04-2.06,6.23-2.69,2.19-.63,4.45-.95,6.78-.95,5.65,0,9.64,1.98,11.97,5.93,2.33,3.96,3.49,9.62,3.49,17.01v29.82Z"/>
+                <path fill="#187cf5" d="M434.06,129.68c-3.66,0-7.05-.71-10.17-2.14-3.13-1.43-5.83-3.39-8.13-5.88-2.29-2.49-4.09-5.37-5.39-8.63-1.3-3.26-1.94-6.75-1.94-10.47s.65-7.1,1.94-10.32c1.3-3.22,3.08-6.05,5.34-8.48,2.26-2.43,4.94-4.34,8.03-5.73s6.43-2.09,10.02-2.09,7.05.72,10.17,2.14c3.12,1.43,5.82,3.36,8.08,5.79,2.26,2.43,4.02,5.25,5.29,8.48,1.26,3.23,1.89,6.63,1.89,10.22v1.25c0,.5-.03.81-.1.95h-45.48c.2,2.99.9,5.77,2.09,8.33,1.2,2.56,2.71,4.77,4.54,6.63,1.83,1.86,3.94,3.33,6.33,4.39,2.39,1.06,4.95,1.6,7.68,1.6,1.79,0,3.56-.25,5.29-.75,1.73-.5,3.34-1.18,4.84-2.04,1.5-.86,2.83-1.91,3.99-3.14,1.16-1.23,2.08-2.58,2.74-4.04l4.39,1.2c-.73,1.86-1.81,3.58-3.24,5.14-1.43,1.56-3.09,2.91-4.99,4.04-1.89,1.13-3.97,2.01-6.23,2.64-2.26.63-4.59.95-6.98.95ZM454.4,100.76c-.2-3.06-.88-5.85-2.04-8.38-1.16-2.53-2.66-4.7-4.49-6.53-1.83-1.83-3.94-3.26-6.33-4.29-2.39-1.03-4.96-1.55-7.68-1.55s-5.29.52-7.68,1.55c-2.39,1.03-4.5,2.46-6.33,4.29-1.83,1.83-3.29,4.02-4.39,6.58-1.1,2.56-1.75,5.34-1.95,8.33h40.89Z"/>
+                <path fill="#187cf5" d="M493,126.19c-.27.13-.71.38-1.35.75-.63.37-1.43.71-2.39,1.05-.96.33-2.04.63-3.24.9-1.2.27-2.49.4-3.89.4s-2.71-.2-3.94-.6-2.31-1-3.24-1.79c-.93-.8-1.66-1.76-2.19-2.89-.53-1.13-.8-2.46-.8-3.99v-39.1h-7.28v-4.09h7.28v-17.75h4.99v17.75h12.07v4.09h-12.07v37.9c0,1.93.66,3.38,1.99,4.34s2.83,1.45,4.49,1.45c2.06,0,3.84-.35,5.34-1.05s2.41-1.15,2.74-1.35l1.5,3.99Z"/>
+              </svg>
+              <p class="hero-sub">Conexão de alta velocidade para sua região</p>
+              <div class="hero-btns">
+                <button class="btn-primary" style="background:#187cf5">Saiba mais</button>
+              </div>
+            </div>
+            <div class="hero-art" style="background:rgba(24,124,245,.12);display:flex;align-items:center;justify-content:center">
+              <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="9 10 133 180" width="100%" height="100%">
+                <defs>
+                  <clipPath id="cp-net"><path fill="none" d="M105.3,175.59q.45-.87.8-1.69t.8-1.81q1.03-.83,1.98-1.6,1.01-.86,1.95-1.65.56.1,1.03.25.53.05.96.17-.43.87-.88,1.72-.4.77-.88,1.61-.87.76-1.81,1.59-.88.74-1.84,1.55-.46-.04-1.02-.02-.49-.09-1.08-.11M111.42,165.58q-1.47,1.23-3.03,2.5h0q-1.57,1.25-3.14,2.48-.55.42-1.11.84-.19.52-.38,1.04-.56,1.45-1.17,2.87-.57,1.34-1.18,2.65-.19.42-.45.89.39-.01.69.03.87.07,1.79.04.81-.02,1.58-.1.25-.03.49-.07.49-.4.98-.8,1.37-1.15,2.73-2.33,1.34-1.19,2.58-2.34.46-.43.92-.87.24-.35.54-.8.74-1.17,1.44-2.38.67-1.22,1.37-2.55.24-.47.48-.95-.21-.05-.44-.09-.67-.15-1.39-.35-.83-.16-1.64-.44-.29-.11-.58-.23-.53.46-1.07.93M68.17,184.58q-.44-.66-.98-1.31.73-.83,1.44-1.66.78-.87,1.47-1.71,1.17-.14,2.43-.34,1.18-.17,2.29-.3.44.69.87,1.36.42.66.84,1.3-.72.82-1.46,1.63h0q-.75.81-1.42,1.57-1.14.18-2.27.36-1.22.2-2.35.35-.44-.62-.88-1.26M84.5,162.43q-.68-1.39-1.46-2.74,1.12-1.64,2.26-3.31,1.11-1.66,2.2-3.32,1.81-.2,3.63-.43,1.78-.23,3.51-.45.64,1.42,1.29,2.78.61,1.35,1.19,2.69-1.11,1.62-2.18,3.19h0q-1.09,1.57-2.15,3.07-1.74.34-3.41.59-1.79.31-3.56.59-.62-1.34-1.34-2.65M96.75,146.75q-2.46.29-5,.6-2.56.26-5.19.53-.8.1-1.55.15-.45.71-.91,1.43-1.6,2.46-3.16,4.84-1.57,2.36-3.16,4.69-.49.69-.92,1.34.32.59.63,1.18,1.13,1.94,2.15,3.88h0q.7,1.33,1.44,2.59-2.77,3.66-5.52,7.18-1.17.14-2.41.31-1.94.22-3.94.45-.78.08-1.55.17-.47.58-.88,1.13-1.22,1.47-2.41,2.9-1.15,1.4-2.34,2.76-.47.53-.87,1.03.31.43.63.86.8,1.08,1.61,2.12.71,1.02,1.51,1.96.22.39.53.73.76-.11,1.43-.2,1.82-.26,3.73-.58,1.75-.27,3.58-.61.68-.13,1.36-.26.43-.45.94-.94,1.12-1.19,2.31-2.44h0q1.24-1.31,2.36-2.59.46-.52.92-1.03-.22-.4-.45-.79-.61-1.06-1.23-2.15-.4-.69-.8-1.4,2.74-3.42,5.51-7.01,1.71-.26,3.43-.57,2.34-.41,4.69-.89.69-.15,1.31-.26.43-.6.93-1.25,1.55-2.13,3.06-4.27h0q1.47-2.13,3.02-4.41.39-.59.82-1.25-.21-.52-.38-1.11-.77-1.87-1.55-3.8-.87-1.94-1.73-4.02-.27-.59-.55-1.19-.73.12-1.41.18M128.3,149.51q.09-.9.21-1.9.72-1.39,1.48-2.87.7-1.4,1.38-2.81.6-.42,1.17-.87.53-.46,1.02-.94-.19.95-.41,1.89-.21.83-.46,1.66-.63,1.34-1.28,2.68-.67,1.33-1.35,2.65-.46.6-.91,1.08-.53.56-1.1,1.09.12-.78.26-1.66M135.11,135.86q-.64.55-1.35,1.06-.84.59-1.75,1.12-.31.21-.58.33-.3.66-.57,1.21-1.02,2.14-2.07,4.25-1.04,2.01-2.15,4.1-.35.63-.69,1.26.03.37,0,.83,0,1.3-.07,2.59-.15,1.24-.31,2.37-.07.33-.14.66.25-.22.5-.44.84-.85,1.56-1.65.47-.59.9-1.21-.24.48-.48.95c2.21-3.82,4.2-7.79,5.93-11.88t-.02-.01q.46-1.19.85-2.4.36-1.34.62-2.6.08-.43.15-.85-.16.17-.33.33M46.84,152.12q-1.43-.72-2.82-1.46,0-1.53.04-3.08.01-1.56.06-3.14,1.44-.8,2.89-1.61,1.47-.81,2.94-1.64,1.44.76,2.85,1.52h0q1.41.76,2.83,1.5-.06,1.57-.12,3.12-.05,1.53-.13,3.07-1.44.79-2.84,1.58h0q-1.47.8-2.92,1.59-1.37-.74-2.8-1.46M48.48,135.18q-2.24,1.27-4.52,2.54-2.26,1.27-4.53,2.51-.78.44-1.57.87,0,.85,0,1.7-.02,2.43-.01,4.82,0,2.37-.01,4.7-.02.81-.05,1.61.78.39,1.57.79,2.21,1.12,4.34,2.22,2.17,1.08,4.31,2.14.7.37,1.46.73.73-.39,1.51-.8,2.19-1.18,4.4-2.37h0q2.17-1.19,4.36-2.41.78-.43,1.55-.87.01-.77.07-1.59.1-2.3.22-4.65.12-2.38.22-4.79.01-.83.05-1.68-.76-.39-1.5-.8-2.14-1.17-4.34-2.33-2.17-1.21-4.39-2.4-.77-.42-1.52-.86-.82.46-1.61.91M16.25,100q.72-1.25,1.45-2.53.73-1.28,1.46-2.55,1.46,0,2.93-.01s0,.01,0,.01q1.46,0,2.94,0,.73,1.27,1.46,2.53.73,1.28,1.47,2.56-.74,1.26-1.47,2.55s0,0,0,.02q-.73,1.27-1.46,2.52-1.47,0-2.94,0-1.46,0-2.92-.01-.73-1.27-1.46-2.52h0q-.72-1.27-1.45-2.54M52.33,103.91v-.02q-1.11-1.93-2.23-3.88,1.12-1.96,2.23-3.9v-.02q1.1-1.93,2.2-3.86,2.22,0,4.42.01,2.2.01,4.39.03,1.1,1.93,2.18,3.85h0q1.09,1.94,2.16,3.89-1.08,1.91-2.16,3.85h0q-1.09,1.94-2.18,3.85-2.19.02-4.39.03-2.21,0-4.42,0-1.1-1.92-2.2-3.86M49.93,87.43q-1.55,2.73-3.13,5.46h0q-1.12,1.94-2.24,3.88-5.52,0-11.04,0-.73-1.27-1.47-2.53-1.2-2.08-2.4-4.16-.47-.8-.93-1.61-.92,0-1.85,0-2.38,0-4.77.02s0,0,0,0q-2.38.01-4.75.04-.92.01-1.82.02-.45.79-.92,1.59-1.18,2.06-2.36,4.12h0q-1.18,2.08-2.35,4.14-.45.79-.9,1.58.45.76.9,1.58,1.17,2.05,2.34,4.11v.03q1.19,2.07,2.38,4.13.45.8.92,1.6.91,0,1.82.02,2.37.01,4.74.01,2.39.02,4.78.03.92,0,1.85,0,.47-.81.93-1.62,1.19-2.06,2.4-4.13.74-1.27,1.47-2.55h11.04q1.12,1.96,2.23,3.9s0-.01,0,0q1.57,2.74,3.13,5.46.46.8.92,1.6.9,0,1.82,0,3.12-.02,6.23-.04,3.1-.05,6.15-.07.89-.01,1.78-.05.45-.77.91-1.58,1.55-2.72,3.08-5.43h0q1.51-2.69,3.02-5.42.43-.79.87-1.56-.44-.81-.87-1.6-1.51-2.73-3.02-5.42h0q-1.53-2.7-3.08-5.43-.45-.78-.91-1.58-.9-.03-1.76-.02-3.07-.04-6.16-.07-3.12-.04-6.24-.06-.91,0-1.82,0-.47.8-.92,1.6M132.53,58.94q-.57-.44-1.17-.86-.68-1.41-1.38-2.81-.76-1.49-1.48-2.87-.11-1-.21-1.89-.14-.89-.26-1.66.57.53,1.1,1.08.45.49.91,1.08.68,1.33,1.35,2.65.65,1.33,1.28,2.68.25.82.46,1.65.23.94.41,1.9-.49-.49-1.02-.95M125.57,45.03q.17,1.13.31,2.38.07,1.28.07,2.59.02.46,0,.83.34.62.69,1.26,1.11,2.08,2.15,4.09,1.05,2.12,2.07,4.25.27.56.57,1.21.27.11.58.32.91.54,1.75,1.12.72.52,1.35,1.07.17.16.33.33-.07-.42-.15-.84-.25-1.26-.62-2.6-.39-1.22-.84-2.41s0,0,.01,0c-1.73-4.1-3.72-8.07-5.93-11.89q.24.47.48.95-.43-.61-.9-1.2-.72-.8-1.51-1.57-.3-.31-.55-.52.08.33.14.65M110.37,151.83q.46-2.31.86-4.6.43-2.44.81-4.84,1.89-1.57,3.68-3.04,1.78-1.53,3.55-3.12,1.29.96,2.53,1.81,1.2.74,2.29,1.55-.45,2.24-.95,4.5-.5,2.17-1,4.25-1.59,1.59-3.15,3.06h0q-1.68,1.59-3.34,3.04-1.21-.59-2.48-1.23s0,0-.06.07q-1.34-.7-2.73-1.44M79.77,135.36q-2.31-1.3-4.65-2.63.11-2.87.22-5.78.11-2.95.19-5.89,2.48-1.52,4.96-3.09,2.45-1.54,4.87-3.1,2.3,1.43,4.58,2.8s0,0,0,0q2.23,1.35,4.38,2.73-.12,2.82-.25,5.65-.17,2.84-.35,5.62-2.3,1.55-4.65,3.11h0q-2.36,1.52-4.75,3.06-2.25-1.23-4.55-2.47M136.17,124.94q.34-2.15.66-4.4.28-2.25.53-4.5.79-1.24,1.53-2.6.66-1.28,1.25-2.48.34.89.6,1.77.18.87.29,1.64-.28,2.11-.58,4.1-.32,1.88-.7,3.87-.41,1.32-.89,2.62-.56,1.39-1.18,2.76-.26-.62-.58-1.36h0q-.43-.64-.91-1.41M111.96,107.84q.07-3.91.09-7.79-.02-3.98-.09-7.88,2.52-1.86,4.94-3.64h0q2.29-1.77,4.45-3.52,2.26,2.04,4.4,4.01h0q2.01,1.9,3.9,3.79.09,3.57.12,7.26-.03,3.57-.12,7.14-1.89,1.9-3.9,3.79h0q-2.14,1.97-4.4,4-2.17-1.75-4.46-3.53h0q-2.42-1.78-4.94-3.63M138.89,86.57q-.74-1.36-1.53-2.6-.25-2.25-.53-4.5-.32-2.25-.66-4.4.49-.76.91-1.42h0q.32-.73.58-1.35.62,1.37,1.18,2.75.48,1.31.89,2.63.38,1.99.7,3.87.3,2,.58,4.1-.1.76-.29,1.64-.26.88-.6,1.76-.58-1.2-1.25-2.48M80.47,82.04q-2.48-1.55-4.95-3.08-.08-2.94-.19-5.9-.11-2.91-.22-5.78,2.35-1.33,4.65-2.63,2.3-1.24,4.55-2.48,2.39,1.54,4.74,3.06h0q2.34,1.56,4.65,3.11.17,2.78.35,5.62.14,2.83.28,5.7-2.18,1.33-4.4,2.68h0q-2.27,1.37-4.58,2.8-2.43-1.56-4.87-3.1M115.63,45.58q1.66,1.46,3.34,3.04s0,0,0,0q1.56,1.46,3.15,3.06.5,2.09,1,4.25.5,2.26.95,4.5-1.09.8-2.29,1.54h0q-1.25.86-2.52,1.82-1.76-1.59-3.54-3.12h0q-1.79-1.47-3.68-3.04-.38-2.41-.81-4.84-.39-2.3-.85-4.61,1.39-.74,2.73-1.43.06.08.06.08,1.27-.64,2.48-1.24M113.56,40.96q-1.55.7-3.26,1.41-1.8.82-3.69,1.72-.45.23-.95.41.14.68.28,1.36.6,3.07,1.09,6.1.48,3.15.94,6.39.12.79.2,1.51.58.43,1.21.94,2.54,2.01,4.97,3.98h0q1.85,1.55,3.61,3.02.68,6.17,1.19,12.37-2.23,1.64-4.57,3.32-2.46,1.79-5.04,3.58-4.85-3.53-9.97-7.18-.15-2.85-.31-5.63-.23-3.59-.49-7.14-.08-.84-.14-1.63-.66-.45-1.35-.96-2.92-2-5.89-3.98h0q-3.04-2.03-6.13-4.03-.69-.43-1.39-.86-.66.34-1.32.69-2.95,1.51-5.89,3.15-3.08,1.61-6.16,3.31-.76.38-1.47.8.02.84.07,1.71.13,3.75.26,7.56.11,3.85.2,7.72,0,.88.03,1.77.78.47,1.55.95,3.3,2,6.55,3.99,3.21,2.02,6.37,4,.72.47,1.44.91.71-.42,1.41-.85,2.99-1.9,5.91-3.72,2.2-1.41,4.36-2.76,5.21,3.59,10.16,7.11.07,4.03.09,8.05-.03,4.01-.09,7.97-4.95,3.52-10.16,7.1-2.16-1.34-4.36-2.75-2.93-1.82-5.91-3.72-.7-.43-1.4-.85-.72.44-1.44.91-3.16,1.97-6.37,4-3.25,1.99-6.54,3.99-.78.49-1.55.95-.02.9-.03,1.78-.08,3.87-.2,7.72-.13,3.81-.26,7.56-.05.86-.07,1.7.72.42,1.48.8,3.08,1.71,6.16,3.31,2.94,1.64,5.89,3.14.66.35,1.27.74.74-.48,1.43-.92,3.09-2,6.14-4.02s0,0,0,0q2.96-1.98,5.88-3.99.69-.5,1.35-.96.06-.78.14-1.62.27-3.56.49-7.14.15-2.78.31-5.64,5.11-3.58,9.97-7.18,2.58,1.8,5.04,3.58,2.35,1.68,4.57,3.32-.54,6.29-1.19,12.37-1.76,1.46-3.6,3.02-2.44,1.96-4.98,3.97-.62.51-1.21.95-.08.72-.2,1.51-.47,3.25-.94,6.39-.54,3.11-1.08,6.1-.14.68-.28,1.37.5.17.95.41,1.9.9,3.69,1.71,1.65.79,3.26,1.41.35.14.69.28.46-.39.99-.86,2.17-1.98,4.24-3.94,1.98-1.95,3.91-3.97.43-.45.85-.91.18-.6.35-1.2.74-2.68,1.45-5.47.63-2.78,1.23-5.65.14-.69.27-1.38-.29-.21-.59-.44-1.35-1.04-2.8-2.21-1.22-.86-2.49-1.81.68-5.9,1.24-12.06,2.19-2.03,4.26-3.98h0q1.95-1.96,3.78-3.93,2.46,2.59,4.5,5.02-.24,2.32-.52,4.63-.39,2.93-.85,5.86-.09.61-.22,1.31.22.16.39.43.73.97,1.35,1.81.47.8.81,1.57.07.14.13.26.19-.39.4-.87.76-1.76,1.43-3.56.42-1.32.79-2.65c.9-3.69,1.62-7.47,2.12-11.31.07-.62.08-.62.17-1.35q.06-.53.13-1.17.01-.2.03-.42-.02-1.18-.19-2.25-.29-1.19-.71-2.49-.12-.32-.24-.64-.16.41-.32.71-.79,1.61-1.7,3.2-.78,1.26-1.63,2.5-1.94-2.44-4.29-5.11.09-3.48.13-6.97-.04-3.6-.13-7.09,2.35-2.66,4.29-5.1.85,1.24,1.63,2.5.91,1.59,1.7,3.2.16.3.32.71.12-.32.24-.64.42-1.29.71-2.48.17-1.08.19-2.26-.01-.21-.03-.42-.07-.63-.13-1.16c-.08-.63-.08-.64-.17-1.36-.51-3.84-1.22-7.61-2.12-11.3q-.38-1.33-.79-2.65-.67-1.8-1.43-3.56-.21-.49-.4-.86-.06.13-.13.26-.34.77-.81,1.57-.59.94-1.35,1.81-.18.27-.39.43.13.71.25,1.42.43,2.83.82,5.75.28,2.32.52,4.64-2.03,2.43-4.5,5.01-1.82-1.96-3.78-3.92h0q-2.07-1.96-4.26-3.99-.54-6.07-1.24-12.05,1.27-.96,2.49-1.82,1.45-1.16,2.8-2.2.3-.23.59-.45-.13-.69-.27-1.37-.6-2.87-1.23-5.65-.7-2.78-1.45-5.47-.17-.6-.35-1.2-.42-.45-.85-.91-1.93-2.02-3.91-3.97-2.07-1.96-4.24-3.94-.53-.47-.99-.86-.34.14-.69.27M47.01,57.18q-1.45-.81-2.89-1.61-.04-1.58-.06-3.14-.04-1.55-.04-3.09,1.39-.74,2.82-1.46,1.43-.73,2.8-1.46,1.44.79,2.92,1.59s0,0,0,0q1.41.78,2.84,1.58.08,1.54.13,3.07.05,1.55.12,3.12-1.42.74-2.84,1.5-1.41.76-2.85,1.52-1.48-.83-2.94-1.64M48,40.92q-2.14,1.06-4.31,2.14-2.14,1.11-4.34,2.22-.79.39-1.57.81.02.79.05,1.6.01,2.34.01,4.7-.01,2.39.01,4.82,0,.85,0,1.7.79.43,1.57.87,2.26,1.25,4.53,2.51,2.28,1.27,4.56,2.56.75.43,1.57.89.75-.43,1.52-.86,2.23-1.2,4.39-2.4s0,0,.04.02q2.16-1.18,4.29-2.35.75-.41,1.51-.79-.04-.85-.05-1.68-.1-2.4-.22-4.79-.11-2.34-.22-4.66-.06-.8-.08-1.59-.77-.43-1.55-.87-2.14-1.19-4.36-2.41-2.21-1.19-4.4-2.36-.78-.41-1.51-.81-.77.36-1.47.73M108.88,29.52q-.95-.77-1.98-1.61-.39-.9-.8-1.8-.35-.82-.8-1.7.59-.03,1.16-.04.48-.06.94-.09.96.8,1.84,1.55.95.82,1.81,1.59.49.83.95,1.68.38.78.82,1.64-.43.11-.96.18-.47.15-1.03.24-.94-.79-1.96-1.65M101.64,21.1q-.3.05-.69.04.27.47.45.89.62,1.31,1.19,2.65.61,1.43,1.16,2.88.2.51.38,1.04.55.42,1.11.84,1.58,1.23,3.14,2.48,1.55,1.27,3.03,2.5.54.46,1.07.93.29-.12.58-.23.88-.2,1.64-.44.72-.19,1.39-.34.23-.05.44-.09-.24-.48-.48-.95-.7-1.32-1.37-2.55-.7-1.2-1.44-2.38-.3-.44-.54-.8-.46-.44-.92-.88-1.24-1.14-2.58-2.34-1.36-1.17-2.73-2.32-.49-.4-.98-.8-.24-.04-.49-.07-.77-.08-1.58-.1-.84.03-1.79.04M91.13,47.38q-1.82-.24-3.62-.43-1.09-1.66-2.2-3.33s0,0,0,0q-1.14-1.67-2.25-3.3.77-1.35,1.45-2.73.71-1.31,1.4-2.59,1.71.22,3.5.54,1.67.24,3.34.52,1.12,1.57,2.21,3.13,1.07,1.57,2.17,3.19-.58,1.34-1.19,2.68-.65,1.36-1.29,2.78-1.74-.22-3.51-.46M67.2,16.73q.53-.64.98-1.31.44-.64.88-1.26,1.12.15,2.35.35,1.13.17,2.27.36.68.76,1.42,1.57.74.81,1.46,1.63-.42.64-.84,1.29s0,0,0,0q-.43.67-.87,1.35-1.11-.14-2.29-.3-1.26-.19-2.43-.33-.69-.84-1.47-1.71h0q-.71-.83-1.44-1.65M64.91,11.14q-.8.94-1.51,1.96-.8,1.04-1.61,2.12-.31.42-.62.86.39.49.87,1.02,1.19,1.37,2.34,2.76s0,0,0,0q1.19,1.43,2.41,2.91.4.54.88,1.13.77.08,1.55.17,2,.23,3.94.45,1.24.17,2.41.31,2.75,3.52,5.52,7.17-.74,1.26-1.44,2.59s0,0,0,0q-1.02,1.93-2.15,3.88-.31.59-.63,1.18.49.7.92,1.35,1.58,2.33,3.15,4.68,1.56,2.38,3.16,4.84.46.71.91,1.43.75.04,1.55.14,2.63.27,5.19.54,2.54.3,5,.59.69.06,1.42.19.28-.6.55-1.2.86-2.07,1.72-4.01.79-1.94,1.56-3.8.22-.52.38-1.12-.38-.6-.82-1.26-1.55-2.27-3.02-4.41-1.51-2.14-3.06-4.27-.5-.65-.93-1.25-.62-.1-1.31-.25-2.35-.49-4.69-.89-1.72-.3-3.43-.57-2.77-3.58-5.51-7,.4-.71.8-1.4.63-1.1,1.23-2.16.22-.39.45-.79-.46-.53-.92-1.04-1.12-1.28-2.36-2.59-1.18-1.25-2.31-2.45-.51-.49-.94-.94-.68-.13-1.36-.25-1.84-.34-3.58-.61-1.83-.29-3.73-.59-.67-.08-1.43-.2-.31.35-.53.74"/></clipPath>
+                  <linearGradient id="gs-net" x1="-.4" y1="200" x2=".82" y2="200" gradientTransform="translate(52.5712 21694.1086) scale(107.9705 -107.9705)" gradientUnits="userSpaceOnUse">
+                    <stop offset="0" stop-color="#89caef"/><stop offset=".21" stop-color="#61aef1"/><stop offset=".43" stop-color="#4198f2"/><stop offset=".64" stop-color="#2a88f4"/><stop offset=".83" stop-color="#1c7ff4"/><stop offset="1" stop-color="#187cf5"/>
+                  </linearGradient>
+                </defs>
+                <g clip-path="url(#cp-net)"><rect fill="url(#gs-net)" x="9" y="10.41" width="132.59" height="179.19"/></g>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 2: MVF SOLAR -->
+        <div class="hero-slide" style="background:linear-gradient(160deg,#261400 0%,#140a00 80%,#080400 100%)">
+          <div class="hero-inner">
+            <div>
+              <div class="hero-eyebrow" style="color:#f5a718">◈ Energia Solar</div>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="10 193 333 65" style="width:100%;max-height:52px;display:block;margin:2px 0 4px">
+                <path fill="rgba(255,255,255,.88)" d="M13.59,253.9v-38.45h15.32v38.45h-15.32ZM37.26,253.9v-22.04c0-1.3-.39-2.33-1.17-3.09-.78-.75-1.77-1.13-2.97-1.13-.83,0-1.58.17-2.23.51-.65.34-1.15.82-1.48,1.45-.34.62-.51,1.38-.51,2.27l-5.94-2.19c0-3.13.69-5.81,2.07-8.05,1.38-2.24,3.24-3.96,5.59-5.16,2.34-1.2,5-1.8,7.97-1.8,2.6,0,4.96.62,7.07,1.88,2.11,1.25,3.79,2.98,5.04,5.2,1.25,2.21,1.88,4.83,1.88,7.85v24.3h-15.32ZM60.94,253.9v-22.04c0-1.3-.39-2.33-1.17-3.09-.78-.75-1.77-1.13-2.97-1.13-.83,0-1.58.17-2.23.51-.65.34-1.15.82-1.48,1.45-.34.62-.51,1.38-.51,2.27l-8.99.08c0-3.59.72-6.68,2.15-9.26,1.43-2.58,3.42-4.56,5.98-5.94,2.55-1.38,5.47-2.07,8.75-2.07,3.07,0,5.79.65,8.17,1.95,2.37,1.3,4.23,3.18,5.59,5.63,1.35,2.45,2.03,5.39,2.03,8.83v22.82h-15.32Z"/>
+                <path fill="rgba(255,255,255,.88)" d="M91.89,253.9l-15.08-38.45h16.25l8.83,32.74h-5.55l8.75-32.74h16.18l-15.08,38.37-14.3.08Z"/>
+                <path fill="rgba(255,255,255,.88)" d="M123.54,227.96v-12.5h33.68v12.5h-33.68ZM131.35,253.9v-40.01c0-3.33.73-6.37,2.19-9.1,1.46-2.74,3.57-4.92,6.33-6.56,2.76-1.64,6.1-2.46,10-2.46,2.92,0,5.51.47,7.78,1.41,2.27.94,4.15,2.19,5.67,3.75l-9.46,9.46c-.37-.42-.83-.72-1.41-.9-.57-.18-1.17-.27-1.8-.27-1.2,0-2.16.37-2.89,1.09-.73.73-1.09,1.69-1.09,2.89v40.71h-15.32Z"/>
+                <path fill="#f5a718" d="M181.88,254.72c-3.25,0-6.36-.54-9.34-1.62-2.98-1.08-5.58-2.71-7.8-4.87l2.03-2.76c2.27,2.06,4.63,3.57,7.07,4.55s5.12,1.46,8.04,1.46c3.68,0,6.65-.77,8.89-2.31s3.37-3.7,3.37-6.46c0-1.3-.28-2.4-.85-3.29-.57-.89-1.42-1.65-2.56-2.27-1.14-.62-2.55-1.18-4.22-1.67-1.68-.49-3.63-1-5.85-1.54-2.38-.54-4.45-1.08-6.21-1.62-1.76-.54-3.21-1.19-4.35-1.95-1.14-.76-1.99-1.68-2.56-2.76-.57-1.08-.85-2.46-.85-4.14,0-2.11.41-3.95,1.22-5.52.81-1.57,1.94-2.87,3.37-3.9,1.43-1.03,3.09-1.8,4.95-2.31,1.87-.51,3.86-.77,5.97-.77,3.3,0,6.23.56,8.77,1.67,2.54,1.11,4.52,2.53,5.93,4.26l-2.27,2.19c-1.41-1.62-3.24-2.84-5.48-3.65-2.25-.81-4.64-1.22-7.19-1.22-1.57,0-3.05.16-4.43.49-1.38.33-2.59.84-3.61,1.54-1.03.71-1.84,1.61-2.44,2.72-.6,1.11-.89,2.42-.89,3.94,0,1.25.2,2.25.61,3,.41.76,1.06,1.41,1.95,1.95.89.54,2.04,1.02,3.45,1.42,1.41.41,3.09.85,5.04,1.34,2.65.65,5.01,1.27,7.07,1.87,2.06.6,3.78,1.33,5.16,2.19,1.38.87,2.44,1.9,3.17,3.09.73,1.19,1.1,2.71,1.1,4.55,0,3.79-1.48,6.81-4.43,9.06-2.95,2.25-6.89,3.37-11.82,3.37Z"/>
+                <path fill="#f5a718" d="M225.25,254.72c-2.98,0-5.73-.58-8.24-1.75-2.52-1.16-4.7-2.75-6.54-4.75-1.84-2-3.28-4.33-4.3-6.98-1.03-2.65-1.54-5.44-1.54-8.37s.53-5.79,1.58-8.45c1.06-2.65,2.5-4.98,4.34-6.98,1.84-2,4.02-3.59,6.54-4.75,2.52-1.16,5.24-1.75,8.16-1.75s5.63.58,8.12,1.75c2.49,1.17,4.67,2.75,6.54,4.75,1.87,2,3.33,4.33,4.39,6.98,1.06,2.65,1.58,5.47,1.58,8.45s-.53,5.71-1.58,8.37c-1.06,2.65-2.5,4.98-4.34,6.98-1.84,2-4.02,3.59-6.54,4.75-2.52,1.16-5.24,1.75-8.16,1.75ZM208.68,233.03c0,2.49.43,4.83,1.3,7.03.87,2.19,2.04,4.1,3.53,5.73,1.49,1.62,3.23,2.91,5.24,3.86,2,.95,4.14,1.42,6.42,1.42s4.41-.47,6.42-1.42c2-.95,3.76-2.26,5.28-3.94,1.52-1.68,2.71-3.61,3.57-5.81.87-2.19,1.3-4.56,1.3-7.11s-.43-4.83-1.3-7.02c-.87-2.19-2.06-4.11-3.57-5.77-1.52-1.65-3.26-2.96-5.24-3.94-1.98-.97-4.1-1.46-6.38-1.46s-4.41.49-6.42,1.46c-2,.97-3.75,2.3-5.24,3.98-1.49,1.68-2.68,3.64-3.57,5.89-.89,2.25-1.34,4.62-1.34,7.11Z"/>
+                <path fill="#f5a718" d="M255.95,194.61h4.14v50.92c0,1.57.45,2.82,1.34,3.74.89.92,2.12,1.38,3.7,1.38.59,0,1.31-.07,2.15-.2.84-.13,1.61-.34,2.31-.61l.81,3.25c-.92.38-2.06.69-3.41.93-1.35.24-2.52.37-3.49.37-2.27,0-4.1-.69-5.48-2.07-1.38-1.38-2.07-3.23-2.07-5.56v-52.14Z"/>
+                <path fill="#f5a718" d="M287.05,254.72c-1.95,0-3.76-.34-5.44-1.02-1.68-.68-3.15-1.6-4.43-2.76-1.27-1.16-2.26-2.54-2.96-4.14-.7-1.6-1.06-3.32-1.06-5.16s.43-3.52,1.3-5.04c.87-1.51,2.07-2.83,3.61-3.94,1.54-1.11,3.4-1.98,5.56-2.6,2.17-.62,4.55-.93,7.15-.93,2.27,0,4.56.2,6.86.61,2.3.41,4.37.96,6.21,1.67v-4.14c0-4.01-1.14-7.19-3.41-9.54s-5.36-3.53-9.26-3.53c-2.06,0-4.24.43-6.54,1.3-2.3.87-4.64,2.11-7.03,3.74l-1.54-2.76c5.41-3.68,10.56-5.52,15.43-5.52s9.1,1.48,12.02,4.43c2.92,2.95,4.39,7.03,4.39,12.22v20.63c0,1.35.6,2.03,1.79,2.03v3.66c-.27.05-.56.09-.85.12-.3.03-.56.04-.77.04-1.08,0-1.95-.37-2.6-1.1-.65-.73-1.03-1.61-1.14-2.64v-3.49c-1.95,2.55-4.44,4.5-7.47,5.85-3.03,1.35-6.31,2.03-9.83,2.03ZM287.86,251.47c3.14,0,6.02-.59,8.65-1.79,2.63-1.19,4.64-2.76,6.05-4.71.87-1.14,1.3-2.22,1.3-3.25v-7.47c-1.95-.76-3.98-1.33-6.09-1.71-2.11-.38-4.3-.57-6.58-.57-2.11,0-4.03.23-5.77.69-1.73.46-3.22,1.1-4.47,1.91-1.25.81-2.21,1.8-2.88,2.96-.68,1.17-1.01,2.45-1.01,3.86s.27,2.74.81,3.98c.54,1.25,1.3,2.32,2.27,3.21.97.89,2.12,1.6,3.45,2.11,1.33.51,2.75.77,4.26.77Z"/>
+                <path fill="#f5a718" d="M340.25,215.33c-3.79.11-7.11,1.23-9.95,3.37-2.84,2.14-4.83,5.08-5.97,8.81v26.4h-4.06v-42.23h3.9v10.4c1.46-2.98,3.4-5.4,5.81-7.27,2.41-1.87,4.99-2.94,7.76-3.21.54-.05,1.03-.08,1.46-.08h1.06v3.82Z"/>
+              </svg>
+              <p class="hero-sub">Instalação de painéis solares com garantia</p>
+              <div class="hero-btns">
+                <button class="btn-primary" style="background:#f5a718;color:#1a0800">Saiba mais</button>
+              </div>
+            </div>
+            <div class="hero-art" style="background:rgba(245,167,24,.12);display:flex;align-items:center;justify-content:center">
+              <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="121 28 108 146" width="100%" height="100%">
+                <defs>
+                  <clipPath id="cp-solar"><path fill="none" d="M199.43,162.49q.37-.71.65-1.38t.65-1.47q.84-.68,1.61-1.3.82-.7,1.59-1.35.46.08.84.2.43.04.78.14-.35.71-.72,1.4-.32.62-.72,1.31-.7.62-1.47,1.29-.72.61-1.5,1.26-.38-.03-.83-.02-.4-.07-.88-.09M204.41,154.34q-1.2,1-2.47,2.04h0q-1.27,1.02-2.56,2.02-.45.34-.9.69-.15.42-.31.85-.46,1.18-.95,2.34-.46,1.09-.96,2.16-.15.34-.37.73.31-.01.56.02.71.06,1.46.03.66-.02,1.29-.08.2-.02.4-.06.4-.32.8-.65,1.12-.94,2.22-1.9,1.09-.97,2.1-1.9.38-.35.75-.71.19-.29.44-.65.6-.96,1.17-1.94.54-.99,1.12-2.07.2-.38.39-.77-.18-.04-.36-.07-.55-.12-1.13-.29-.68-.13-1.34-.36-.24-.09-.48-.18-.44.38-.87.76M169.2,169.82q-.36-.54-.79-1.06.59-.68,1.17-1.35.64-.71,1.2-1.39.95-.12,1.98-.27.96-.14,1.87-.25.36.56.71,1.11.35.54.69,1.06-.59.67-1.19,1.33h0q-.61.66-1.16,1.28-.93.15-1.85.29-.99.16-1.91.29-.36-.51-.71-1.02M182.49,151.78q-.56-1.13-1.19-2.23.91-1.34,1.84-2.7.9-1.35,1.79-2.71,1.47-.16,2.96-.35,1.45-.19,2.86-.37.52,1.16,1.05,2.26.5,1.1.97,2.19-.91,1.32-1.77,2.6h0q-.89,1.28-1.75,2.5-1.42.28-2.77.48-1.46.25-2.9.48-.51-1.09-1.09-2.16M192.47,139.01q-2,.23-4.07.49-2.09.21-4.23.43-.65.09-1.26.12-.37.58-.74,1.17-1.3,2-2.57,3.94-1.28,1.92-2.57,3.82-.4.56-.75,1.09.26.48.51.96.92,1.58,1.75,3.16h0q.57,1.09,1.17,2.11-2.25,2.98-4.5,5.85-.96.12-1.96.25-1.58.18-3.21.37-.63.07-1.26.14-.38.47-.71.92-1,1.2-1.96,2.36-.93,1.14-1.91,2.25-.38.43-.71.83l.51.7q.65.88,1.31,1.73.58.83,1.23,1.6.18.32.43.59.62-.09,1.17-.16,1.48-.21,3.04-.47,1.42-.22,2.92-.5.55-.11,1.11-.21.35-.36.77-.76.92-.97,1.88-1.99h0q1.01-1.07,1.92-2.11.38-.42.75-.84-.18-.32-.37-.65-.49-.86-1-1.75-.32-.56-.65-1.14,2.23-2.78,4.48-5.71,1.39-.21,2.79-.46,1.91-.33,3.82-.73.56-.12,1.07-.21.35-.49.76-1.02,1.26-1.74,2.49-3.47h0q1.19-1.74,2.46-3.59.31-.48.67-1.02-.17-.43-.31-.91-.62-1.52-1.27-3.09-.71-1.58-1.41-3.27-.22-.48-.45-.97-.6.1-1.15.15M218.16,141.26q.08-.73.17-1.54.59-1.13,1.21-2.34.57-1.14,1.12-2.28.49-.35.95-.71.43-.37.83-.77-.15.77-.33,1.54-.17.68-.38,1.35-.51,1.09-1.04,2.19-.54,1.08-1.1,2.15-.37.49-.74.88-.43.46-.89.89.1-.64.21-1.35M223.71,130.14q-.52.45-1.1.87-.68.48-1.42.91-.25.17-.47.27-.25.54-.46.99-.83,1.74-1.69,3.46-.85,1.64-1.75,3.33-.28.51-.56,1.02.02.3,0,.68,0,1.06-.06,2.1-.12,1.01-.25,1.93-.05.27-.11.54.21-.18.41-.36.68-.69,1.27-1.35.38-.48.73-.98-.19.39-.39.77c1.8-3.11,3.42-6.34,4.83-9.68t-.02-.01q.37-.97.69-1.96.3-1.09.5-2.12.07-.35.12-.69-.13.14-.27.27M151.83,143.38q-1.17-.59-2.3-1.18,0-1.25.03-2.51.01-1.27.04-2.56,1.17-.65,2.36-1.31,1.19-.66,2.4-1.33,1.18.62,2.32,1.24h0q1.15.62,2.31,1.22-.05,1.28-.1,2.54-.04,1.25-.11,2.5-1.17.65-2.31,1.28h0q-1.2.65-2.38,1.3-1.11-.6-2.28-1.19M153.16,129.59q-1.82,1.03-3.68,2.07-1.84,1.03-3.69,2.04-.64.36-1.28.71,0,.69,0,1.38-.02,1.98,0,3.93,0,1.93,0,3.83-.02.66-.04,1.31.63.32,1.28.65,1.8.91,3.54,1.81,1.76.88,3.51,1.74.57.3,1.19.59.59-.32,1.23-.65,1.79-.96,3.58-1.93h0q1.77-.97,3.55-1.96.64-.35,1.27-.71.01-.63.06-1.29.09-1.88.18-3.79.09-1.94.18-3.9.01-.67.04-1.37-.62-.32-1.23-.65-1.74-.95-3.53-1.9-1.77-.98-3.58-1.96-.63-.35-1.24-.7-.67.38-1.31.74M126.92,100.94q.59-1.01,1.18-2.06.6-1.04,1.19-2.08,1.19,0,2.39-.01s0,.01,0,.01q1.19,0,2.39,0,.59,1.04,1.19,2.06.6,1.04,1.2,2.08-.6,1.03-1.2,2.07s0,0,0,.01q-.59,1.03-1.19,2.05-1.19,0-2.39,0-1.19,0-2.38-.01-.59-1.03-1.19-2.06h0q-.59-1.04-1.18-2.07M156.29,104.12h0q-.9-1.59-1.81-3.17.91-1.6,1.81-3.17h0q.9-1.59,1.79-3.16,1.81,0,3.6.01,1.79.01,3.58.03.89,1.57,1.78,3.14h0q.89,1.58,1.76,3.17-.88,1.56-1.76,3.13h0q-.89,1.58-1.78,3.14-1.79.01-3.58.02-1.8,0-3.6,0-.9-1.56-1.79-3.14M154.34,90.7q-1.27,2.22-2.55,4.44h0q-.91,1.58-1.82,3.16-4.5,0-8.99,0-.6-1.03-1.19-2.06-.98-1.69-1.95-3.38-.38-.65-.76-1.32-.75,0-1.5,0-1.94,0-3.89.02s0,0,0,0q-1.94.01-3.87.03-.75.01-1.49.02-.37.64-.75,1.3-.96,1.68-1.92,3.35h0q-.96,1.69-1.91,3.37-.37.64-.74,1.29.37.62.74,1.29.95,1.67,1.91,3.35v.03q.97,1.68,1.93,3.36.37.65.75,1.3.74,0,1.49.02,1.93.01,3.86.01,1.95.02,3.89.02.75,0,1.5,0,.38-.66.76-1.32.97-1.68,1.95-3.36.6-1.04,1.2-2.08h8.99q.91,1.59,1.82,3.17s0-.01,0,0q1.28,2.23,2.55,4.45.37.65.75,1.3.74,0,1.48,0,2.54-.02,5.07-.03,2.52-.04,5.01-.06.72-.01,1.45-.04.36-.62.74-1.28,1.26-2.22,2.5-4.42h0q1.23-2.19,2.46-4.41.35-.64.71-1.27-.35-.66-.71-1.3-1.23-2.22-2.46-4.42h0q-1.25-2.2-2.5-4.42-.36-.63-.74-1.29-.73-.03-1.44-.02-2.5-.03-5.01-.06-2.54-.03-5.08-.05-.74,0-1.48,0-.38.65-.75,1.3M221.6,67.5q-.46-.36-.95-.7-.55-1.15-1.12-2.29-.62-1.22-1.21-2.34-.09-.82-.17-1.54-.11-.72-.21-1.35.46.43.89.88.37.4.74.88.56,1.08,1.1,2.16.53,1.09,1.04,2.19.21.67.38,1.35.18.77.33,1.54-.4-.39-.83-.77M215.94,56.18q.14.92.25,1.94.06,1.04.06,2.11.02.37,0,.67.28.51.56,1.03.91,1.69,1.75,3.33.86,1.73,1.69,3.47.21.46.46.99.22.09.47.26.74.44,1.42.91.58.42,1.1.87.14.13.27.27-.06-.34-.12-.69-.21-1.02-.5-2.12-.32-.99-.69-1.96s0,0,.01,0c-1.41-3.34-3.03-6.57-4.83-9.68q.2.38.39.77-.35-.49-.73-.97-.59-.65-1.23-1.28-.24-.25-.45-.43.06.27.11.53M203.56,143.15q.38-1.88.7-3.75.35-1.98.66-3.95,1.54-1.28,3-2.48,1.45-1.25,2.89-2.54,1.04.78,2.06,1.48.98.61,1.87,1.26-.37,1.83-.77,3.66-.41,1.77-.82,3.46-1.29,1.3-2.56,2.49h0q-1.37,1.29-2.72,2.48-.99-.48-2.02-1.01s0,0-.04.06q-1.09-.57-2.22-1.17M178.64,129.73q-1.88-1.06-3.79-2.14.09-2.33.18-4.71.09-2.4.15-4.8,2.02-1.24,4.04-2.51,1.99-1.25,3.97-2.53,1.88,1.17,3.73,2.28s0,0,0,0q1.81,1.1,3.57,2.22-.1,2.3-.21,4.6-.14,2.31-.29,4.58-1.87,1.26-3.78,2.53h0q-1.92,1.24-3.87,2.49-1.83-1-3.7-2.01M224.57,121.25q.27-1.75.54-3.59.23-1.83.43-3.67.64-1.01,1.24-2.12.54-1.04,1.01-2.02.28.72.49,1.44.15.71.23,1.33-.23,1.72-.48,3.34-.26,1.53-.57,3.15-.34,1.07-.72,2.13-.45,1.13-.96,2.25-.21-.51-.48-1.11h0q-.35-.52-.74-1.15M204.86,107.32q.05-3.18.07-6.35-.02-3.24-.07-6.42,2.05-1.51,4.02-2.96h0q1.86-1.45,3.62-2.87,1.84,1.66,3.59,3.27h0q1.64,1.54,3.17,3.09.07,2.91.1,5.91-.02,2.91-.1,5.82-1.54,1.54-3.17,3.09h0q-1.74,1.6-3.58,3.26-1.76-1.43-3.63-2.87h0q-1.97-1.45-4.02-2.96M226.78,90.01q-.6-1.11-1.24-2.12-.21-1.83-.43-3.67-.26-1.83-.54-3.58.4-.62.74-1.15h0q.26-.6.48-1.1.51,1.11.96,2.24.39,1.07.72,2.14.31,1.62.57,3.15.25,1.62.48,3.34-.09.62-.23,1.33-.21.72-.49,1.43-.47-.97-1.01-2.02M179.21,86.31q-2.02-1.27-4.03-2.51-.07-2.4-.15-4.8-.09-2.37-.18-4.71,1.91-1.08,3.79-2.14,1.87-1.01,3.71-2.02,1.95,1.25,3.86,2.49h0q1.91,1.27,3.78,2.53.14,2.27.28,4.58.12,2.3.23,4.65-1.77,1.08-3.58,2.18h0q-1.85,1.12-3.73,2.28-1.98-1.27-3.97-2.52M207.85,56.62q1.35,1.18,2.72,2.48s0,0,0,0q1.27,1.19,2.56,2.49.41,1.7.82,3.46.4,1.84.77,3.67-.89.65-1.87,1.25h0q-1.01.7-2.05,1.48-1.43-1.3-2.88-2.54h0q-1.46-1.2-3-2.48-.31-1.96-.66-3.94-.32-1.87-.69-3.76,1.13-.6,2.22-1.17.04.06.05.06,1.03-.53,2.02-1.01M206.16,52.86q-1.26.57-2.66,1.15-1.47.67-3.01,1.4-.36.19-.77.33.12.56.23,1.11.49,2.5.88,4.97.39,2.56.77,5.21.1.64.16,1.23.47.35.98.76,2.07,1.64,4.05,3.24h0q1.5,1.27,2.94,2.46.55,5.02.97,10.07-1.81,1.33-3.72,2.71-2,1.46-4.11,2.91-3.95-2.87-8.12-5.85-.12-2.32-.25-4.59-.18-2.93-.4-5.82-.07-.68-.11-1.33-.54-.36-1.1-.78-2.38-1.63-4.79-3.24h0q-2.48-1.65-5-3.28-.56-.35-1.13-.71-.54.28-1.07.56-2.4,1.23-4.8,2.56-2.51,1.31-5.02,2.7-.62.31-1.2.65.02.68.05,1.39.1,3.05.21,6.16.09,3.14.16,6.29,0,.71.03,1.44.63.38,1.26.78,2.68,1.63,5.33,3.25,2.62,1.65,5.19,3.25.59.38,1.17.74.57-.34,1.15-.69,2.43-1.54,4.82-3.02,1.79-1.15,3.55-2.25,4.24,2.92,8.27,5.79.06,3.28.07,6.56-.02,3.27-.07,6.49-4.03,2.86-8.27,5.78-1.76-1.09-3.55-2.24-2.38-1.48-4.82-3.03-.57-.35-1.14-.69-.58.36-1.17.74-2.57,1.61-5.19,3.25-2.65,1.62-5.33,3.25-.64.4-1.27.77-.02.74-.03,1.45-.07,3.15-.16,6.28-.11,3.11-.21,6.16-.04.7-.05,1.39.59.34,1.2.65,2.51,1.39,5.01,2.7,2.39,1.33,4.8,2.56.54.28,1.04.6.6-.39,1.17-.75,2.51-1.63,5-3.27s0,0,0,0q2.41-1.61,4.79-3.25.57-.41,1.1-.78.05-.64.11-1.32.22-2.9.4-5.82.13-2.27.25-4.59,4.16-2.91,8.12-5.85,2.1,1.46,4.11,2.92,1.91,1.37,3.72,2.7-.43,5.12-.97,10.07-1.43,1.19-2.93,2.46-1.99,1.6-4.05,3.24-.51.42-.98.77-.07.59-.16,1.23-.38,2.64-.77,5.21-.44,2.53-.88,4.97-.11.56-.22,1.11.41.13.77.33,1.54.74,3.01,1.4,1.35.65,2.66,1.15.29.12.57.23.38-.32.8-.7,1.77-1.61,3.45-3.21,1.61-1.59,3.18-3.23.35-.37.69-.74.14-.49.28-.98.6-2.19,1.18-4.45.51-2.27,1-4.6.11-.56.22-1.12-.24-.17-.48-.36-1.1-.85-2.28-1.8-.99-.7-2.02-1.47.55-4.8,1.01-9.82,1.78-1.65,3.46-3.24h0q1.59-1.6,3.08-3.2,2,2.11,3.66,4.09-.2,1.89-.42,3.77-.32,2.39-.69,4.77-.08.49-.18,1.07.18.13.32.35.59.79,1.1,1.48.38.65.66,1.28.06.11.11.22.15-.32.33-.71.62-1.43,1.16-2.9.34-1.07.65-2.16c.74-3.01,1.32-6.08,1.73-9.21.06-.5.06-.51.14-1.1q.05-.43.11-.95.01-.17.02-.35-.02-.96-.15-1.83-.24-.97-.58-2.03-.1-.26-.19-.53-.13.33-.26.58-.65,1.32-1.38,2.61-.64,1.03-1.32,2.04-1.58-1.98-3.49-4.16.07-2.83.1-5.67-.03-2.93-.1-5.77,1.91-2.17,3.49-4.16.69,1.01,1.32,2.04.74,1.29,1.38,2.61.13.25.26.58.1-.26.19-.53.34-1.05.58-2.02.14-.88.15-1.84,0-.17-.02-.35-.06-.51-.11-.94c-.06-.51-.06-.52-.14-1.11-.41-3.12-.99-6.19-1.73-9.2q-.31-1.09-.65-2.16-.54-1.46-1.16-2.9-.18-.4-.33-.7-.05.1-.11.22-.27.62-.66,1.28-.48.77-1.1,1.47-.14.22-.32.35.1.58.2,1.16.35,2.3.67,4.69.23,1.89.42,3.78-1.66,1.98-3.66,4.08-1.49-1.59-3.08-3.19h0q-1.68-1.59-3.46-3.25-.44-4.94-1.01-9.81,1.03-.78,2.03-1.48,1.18-.94,2.28-1.79.24-.18.48-.37-.11-.56-.22-1.12-.49-2.34-1-4.6-.57-2.27-1.18-4.45-.14-.49-.28-.98-.35-.37-.69-.74-1.57-1.64-3.18-3.23-1.69-1.6-3.45-3.21-.43-.39-.8-.7-.28.11-.57.22M151.96,66.07q-1.18-.66-2.36-1.31-.03-1.28-.04-2.56-.03-1.26-.03-2.51,1.13-.6,2.3-1.18,1.16-.59,2.28-1.19,1.18.64,2.38,1.29s0,0,0,0q1.15.64,2.32,1.28.07,1.25.11,2.5.04,1.27.1,2.54-1.16.6-2.31,1.22-1.15.62-2.32,1.24-1.2-.67-2.4-1.34M152.77,52.83q-1.74.87-3.51,1.74-1.74.9-3.54,1.81-.64.32-1.28.65.02.65.04,1.3,0,1.9,0,3.83,0,1.95,0,3.93,0,.69,0,1.38.65.35,1.28.71,1.84,1.02,3.69,2.04,1.86,1.04,3.71,2.08.61.35,1.28.73.61-.35,1.24-.7,1.81-.98,3.57-1.96s0,0,.03.01q1.76-.96,3.5-1.91.61-.33,1.23-.65-.03-.69-.04-1.36-.08-1.96-.18-3.9-.09-1.91-.18-3.79-.05-.66-.06-1.29-.63-.35-1.26-.71-1.74-.97-3.55-1.96-1.8-.97-3.58-1.93-.64-.33-1.23-.65-.62.29-1.2.59M202.34,43.54q-.78-.63-1.61-1.31-.32-.73-.65-1.46-.29-.67-.65-1.38.48-.02.94-.03.39-.05.77-.07.78.65,1.5,1.26.77.67,1.48,1.29.4.68.78,1.37.31.64.66,1.34-.35.09-.78.14-.38.12-.84.2-.76-.64-1.59-1.34M196.45,36.7q-.25.04-.57.03.22.38.37.73.5,1.07.97,2.15.49,1.17.95,2.35.16.42.31.85.45.34.9.68,1.29,1,2.56,2.02,1.27,1.04,2.47,2.04.44.38.87.76.24-.1.48-.19.71-.16,1.34-.36.59-.15,1.13-.28.18-.04.36-.07-.19-.39-.39-.78-.57-1.07-1.12-2.08-.57-.97-1.17-1.94-.24-.36-.44-.65-.37-.36-.75-.71-1.01-.93-2.1-1.9-1.11-.95-2.22-1.89-.4-.33-.8-.65-.2-.03-.4-.05-.63-.06-1.29-.08-.68.03-1.46.03M187.89,58.09q-1.48-.2-2.95-.35-.89-1.35-1.79-2.71s0,0,0,0q-.93-1.36-1.84-2.69.63-1.1,1.18-2.22.58-1.06,1.14-2.11,1.4.18,2.85.44,1.36.2,2.72.43.91,1.28,1.8,2.55.87,1.28,1.77,2.6-.47,1.09-.97,2.19-.53,1.1-1.05,2.27-1.41-.18-2.86-.37M168.4,33.14q.43-.53.79-1.06.36-.52.71-1.02.92.12,1.91.28.92.14,1.85.3.55.62,1.16,1.28.6.66,1.19,1.33-.34.52-.69,1.05s0,0,0,0q-.35.54-.7,1.1-.9-.11-1.87-.24-1.02-.15-1.98-.27-.56-.69-1.2-1.4h0q-.58-.67-1.17-1.35M166.54,28.58q-.65.76-1.23,1.6-.65.85-1.31,1.73-.25.34-.51.7.32.4.71.83.97,1.12,1.91,2.25s0,0,0,0q.97,1.17,1.96,2.36.33.44.71.92.63.07,1.26.14,1.63.18,3.21.36,1.01.14,1.96.25,2.24,2.87,4.5,5.84-.6,1.02-1.17,2.11s0,0,0,0q-.83,1.57-1.75,3.15-.25.48-.51.96.4.57.75,1.1,1.29,1.9,2.57,3.82,1.27,1.94,2.58,3.94.37.58.74,1.17.61.03,1.26.12,2.14.22,4.23.44,2.07.25,4.07.48.56.05,1.15.15.23-.49.45-.98.7-1.68,1.4-3.26.65-1.58,1.27-3.1.18-.42.31-.91-.31-.49-.67-1.02-1.26-1.85-2.46-3.59-1.23-1.74-2.49-3.48-.4-.53-.76-1.02-.5-.08-1.07-.2-1.92-.4-3.82-.73-1.4-.25-2.79-.46-2.26-2.91-4.49-5.7.33-.58.65-1.14.51-.9,1-1.76.18-.32.37-.64-.37-.43-.75-.85-.91-1.04-1.92-2.11-.96-1.02-1.88-1.99-.42-.39-.77-.76-.55-.1-1.11-.2-1.5-.28-2.92-.5-1.49-.24-3.04-.48-.55-.07-1.17-.16-.25.28-.43.6"/></clipPath>
+                  <linearGradient id="gs-solar" x1="0" y1="300" x2="1" y2="300" gradientTransform="translate(121.0142 32492.1037) scale(107.9705 -107.9705)" gradientUnits="userSpaceOnUse">
+                    <stop offset="0" stop-color="#f48a60"/><stop offset=".26" stop-color="#f49942"/><stop offset=".53" stop-color="#f4a62b"/><stop offset=".78" stop-color="#f4ad1d"/><stop offset="1" stop-color="#f4b019"/>
+                  </linearGradient>
+                </defs>
+                <g clip-path="url(#cp-solar)"><rect fill="url(#gs-solar)" x="121.01" y="27.98" width="107.97" height="145.91"/></g>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 3: MVF TV -->
+        <div class="hero-slide" style="background:linear-gradient(160deg,#051f1c 0%,#030f0d 80%,#010706 100%)">
+          <div class="hero-inner">
+            <div>
+              <div class="hero-eyebrow" style="color:#16a085">◈ Streaming</div>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="35 218 325 85" style="width:100%;max-height:52px;display:block;margin:2px 0 4px">
+                <path fill="rgba(255,255,255,.88)" d="M39.65,292.92v-49h19.52v49h-19.52ZM69.82,292.92v-28.08c0-1.66-.5-2.97-1.49-3.93-1-.96-2.26-1.44-3.78-1.44-1.06,0-2.01.22-2.84.65-.83.43-1.46,1.05-1.89,1.84-.43.8-.65,1.76-.65,2.89l-7.57-2.79c0-3.98.88-7.4,2.64-10.26,1.76-2.85,4.13-5.04,7.12-6.57,2.99-1.53,6.37-2.29,10.16-2.29,3.32,0,6.32.8,9.01,2.39,2.69,1.59,4.83,3.8,6.42,6.62,1.59,2.82,2.39,6.16,2.39,10.01v30.97h-19.52ZM100,292.92v-28.08c0-1.66-.5-2.97-1.49-3.93-1-.96-2.26-1.44-3.78-1.44-1.06,0-2.01.22-2.84.65-.83.43-1.46,1.05-1.89,1.84-.43.8-.65,1.76-.65,2.89l-11.45.1c0-4.58.91-8.52,2.74-11.8,1.83-3.29,4.36-5.81,7.62-7.57,3.25-1.76,6.97-2.64,11.15-2.64,3.92,0,7.39.83,10.41,2.49,3.02,1.66,5.39,4.05,7.12,7.17,1.73,3.12,2.59,6.87,2.59,11.25v29.08h-19.52Z"/>
+                <path fill="rgba(255,255,255,.88)" d="M139.44,292.92l-19.22-49h20.72l11.25,41.73h-7.07l11.15-41.73h20.62l-19.22,48.9-18.23.1Z"/>
+                <path fill="rgba(255,255,255,.88)" d="M179.77,259.85v-15.93h42.92v15.93h-42.92ZM189.73,292.92v-50.99c0-4.25.93-8.12,2.79-11.6,1.86-3.49,4.55-6.27,8.07-8.37,3.52-2.09,7.77-3.14,12.75-3.14,3.72,0,7.02.6,9.91,1.79,2.89,1.19,5.29,2.79,7.22,4.78l-12.05,12.05c-.46-.53-1.06-.91-1.79-1.15-.73-.23-1.49-.35-2.29-.35-1.53,0-2.76.46-3.68,1.39-.93.93-1.39,2.16-1.39,3.68v51.89h-19.52Z"/>
+                <path fill="#16a085" d="M261.06,290.33c-.28.14-.74.4-1.4.78-.66.38-1.48.74-2.48,1.09-1,.35-2.12.66-3.36.93s-2.59.41-4.04.41-2.81-.21-4.09-.62c-1.28-.41-2.4-1.04-3.36-1.86-.97-.83-1.73-1.83-2.28-3-.55-1.17-.83-2.55-.83-4.14v-40.57h-7.56v-4.24h7.56v-18.42h5.18v18.42h12.52v4.24h-12.52v39.33c0,2,.69,3.5,2.07,4.5,1.38,1,2.93,1.5,4.66,1.5,2.14,0,3.99-.36,5.54-1.09,1.55-.72,2.5-1.19,2.85-1.4l1.55,4.14Z"/>
+                <path fill="#16a085" d="M286.72,292.92l-22.46-53.82h5.38l19.87,48.65,19.98-48.65h5.07l-22.46,53.82h-5.38Z"/>
+              </svg>
+              <p class="hero-sub">TV ao vivo e conteúdo on demand</p>
+              <div class="hero-btns">
+                <button class="btn-primary" style="background:#16a085">Abrir App</button>
+              </div>
+            </div>
+            <div class="hero-art" style="background:rgba(22,160,133,.12);display:flex;align-items:center;justify-content:center">
+              <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="106 5 138 186" width="100%" height="100%">
+                <defs>
+                  <clipPath id="cp-tv"><path fill="none" d="M205.9,176.42q.47-.9.83-1.75t.83-1.87q1.06-.87,2.05-1.66,1.05-.89,2.03-1.72.58.1,1.07.26.55.06,1,.18-.45.9-.92,1.79-.41.8-.92,1.67-.9.79-1.88,1.65-.91.77-1.91,1.61-.48-.04-1.06-.02-.51-.09-1.13-.12M212.25,166.03q-1.53,1.28-3.14,2.6h0q-1.62,1.3-3.26,2.57-.57.43-1.15.87-.19.54-.4,1.08-.58,1.5-1.21,2.98-.59,1.39-1.22,2.75-.19.43-.47.93.4-.02.72.03.91.08,1.86.04.84-.02,1.64-.1.26-.03.52-.07.51-.41,1.01-.82,1.42-1.2,2.83-2.42,1.39-1.24,2.68-2.42.48-.45.96-.91.24-.37.56-.83.77-1.22,1.5-2.47.69-1.27,1.42-2.64.25-.49.5-.98-.22-.05-.46-.1-.7-.16-1.44-.36-.87-.16-1.7-.46-.31-.12-.61-.23-.56.48-1.11.97M167.37,185.76q-.46-.69-1.01-1.35.76-.87,1.49-1.72.81-.9,1.53-1.77,1.21-.15,2.52-.35,1.23-.17,2.38-.31.46.72.9,1.41.44.68.88,1.34-.75.85-1.52,1.69h0q-.78.84-1.48,1.63-1.18.19-2.36.37-1.26.2-2.44.37-.45-.65-.91-1.31M184.32,162.77q-.71-1.44-1.51-2.84,1.16-1.7,2.34-3.44,1.15-1.72,2.28-3.45,1.88-.21,3.77-.45,1.85-.24,3.65-.47.66,1.47,1.34,2.88.64,1.4,1.24,2.79-1.15,1.68-2.26,3.31h0q-1.14,1.63-2.23,3.19-1.8.36-3.54.61-1.86.32-3.7.62-.64-1.39-1.39-2.75M197.03,146.49q-2.56.3-5.19.62-2.66.27-5.39.55-.83.11-1.61.16-.47.74-.94,1.49-1.66,2.55-3.28,5.02-1.63,2.45-3.28,4.87-.51.72-.96,1.39.33.61.65,1.23,1.17,2.01,2.23,4.02h0q.73,1.38,1.49,2.69-2.87,3.8-5.73,7.45-1.22.15-2.5.32-2.02.23-4.09.47-.81.08-1.61.17-.49.6-.91,1.17-1.27,1.53-2.5,3.01-1.19,1.45-2.43,2.86-.49.55-.9,1.06l.65.9q.83,1.13,1.67,2.2.74,1.05,1.57,2.04.23.4.55.76.79-.11,1.49-.21,1.89-.27,3.87-.6,1.81-.28,3.72-.64.7-.14,1.41-.27.45-.46.98-.97,1.17-1.24,2.4-2.53h0q1.28-1.36,2.45-2.69.48-.54.96-1.07-.23-.41-.47-.82-.63-1.09-1.28-2.24-.41-.71-.83-1.45,2.84-3.55,5.71-7.27,1.78-.27,3.56-.59,2.43-.42,4.87-.93.72-.16,1.36-.27.45-.62.96-1.3,1.61-2.21,3.18-4.43h0q1.52-2.21,3.13-4.57.4-.61.85-1.3-.22-.54-.39-1.16-.8-1.94-1.61-3.94-.91-2.01-1.79-4.17-.28-.61-.57-1.23-.76.12-1.47.19M229.77,149.36q.1-.93.21-1.97.75-1.44,1.54-2.98.72-1.46,1.43-2.91.63-.44,1.21-.91.55-.47,1.05-.98-.19.98-.42,1.97-.22.86-.48,1.72-.65,1.39-1.32,2.79-.69,1.38-1.4,2.75-.48.62-.95,1.12-.55.58-1.14,1.13.13-.81.27-1.72M236.84,135.19q-.66.57-1.4,1.1-.87.61-1.81,1.16-.32.22-.6.34-.31.68-.59,1.26-1.06,2.22-2.16,4.41-1.08,2.08-2.24,4.25-.36.65-.72,1.31.03.39,0,.86,0,1.35-.07,2.68-.15,1.29-.32,2.46-.07.35-.15.68.26-.23.52-.46.87-.88,1.62-1.71.48-.61.93-1.25-.25.5-.5.98c2.3-3.96,4.35-8.08,6.15-12.33t-.02-.01q.48-1.24.88-2.5.38-1.39.64-2.7.08-.44.16-.88-.17.17-.34.35M145.24,152.06q-1.49-.75-2.93-1.51,0-1.59.04-3.2.02-1.62.06-3.26,1.5-.83,3-1.67,1.52-.84,3.05-1.7,1.5.79,2.96,1.58h0q1.47.79,2.94,1.55-.06,1.63-.12,3.24-.05,1.59-.14,3.19-1.49.83-2.95,1.64h0q-1.53.83-3.03,1.65-1.42-.76-2.9-1.51M146.94,134.48q-2.32,1.32-4.69,2.64-2.35,1.32-4.7,2.61-.81.46-1.63.9,0,.88,0,1.76-.02,2.52-.01,5,0,2.46-.01,4.88-.02.84-.05,1.67.81.41,1.63.82,2.29,1.16,4.51,2.31,2.25,1.12,4.47,2.22.72.38,1.52.75.75-.41,1.56-.83,2.27-1.22,4.56-2.46h0q2.25-1.24,4.53-2.5.81-.45,1.61-.9.01-.8.07-1.65.11-2.39.23-4.82.12-2.47.23-4.97.01-.86.05-1.74-.79-.41-1.56-.83-2.22-1.21-4.5-2.42-2.25-1.25-4.56-2.49-.8-.44-1.58-.89-.85.48-1.67.94M113.49,97.98q.75-1.29,1.51-2.63.76-1.33,1.51-2.64,1.52,0,3.04-.01s0,.01,0,.01q1.52,0,3.05,0,.76,1.32,1.52,2.63.76,1.33,1.53,2.65-.77,1.31-1.53,2.64s0,0,0,.02q-.75,1.31-1.52,2.62-1.52,0-3.05,0-1.52,0-3.03-.02-.76-1.31-1.51-2.62h0q-.75-1.32-1.5-2.64M150.93,102.03v-.02q-1.15-2.01-2.31-4.03,1.16-2.04,2.31-4.04v-.02q1.14-2.01,2.28-4.01,2.3,0,4.59.02,2.29.02,4.56.03,1.14,2,2.27,4h0q1.13,2.01,2.25,4.04-1.12,1.98-2.25,4h0q-1.13,2.01-2.27,4-2.27.02-4.56.03-2.29,0-4.59,0-1.14-1.99-2.29-4.01M148.44,84.93q-1.61,2.83-3.25,5.66h0q-1.16,2.01-2.32,4.03-5.73,0-11.46,0-.76-1.31-1.52-2.63-1.24-2.16-2.49-4.31-.49-.83-.96-1.68-.96,0-1.91,0-2.47,0-4.95.02s0,0,0,0q-2.47.02-4.93.04-.95.01-1.89.02-.47.82-.96,1.65-1.23,2.14-2.45,4.27h0q-1.22,2.16-2.44,4.3-.47.82-.94,1.64.47.79.94,1.64,1.22,2.13,2.43,4.27v.03q1.24,2.15,2.46,4.29.47.83.96,1.66.94,0,1.89.02,2.46.02,4.92.02,2.48.02,4.96.03.95,0,1.91,0,.49-.84.96-1.68,1.24-2.14,2.49-4.29.76-1.32,1.53-2.65h11.46q1.16,2.03,2.32,4.05s0-.02,0,0q1.63,2.84,3.25,5.67.48.83.96,1.66.94,0,1.88,0,3.24-.02,6.47-.04,3.22-.05,6.39-.07.92-.02,1.84-.06.46-.8.94-1.64,1.6-2.83,3.19-5.64h0q1.57-2.79,3.13-5.63.45-.82.9-1.62-.45-.84-.9-1.66-1.57-2.83-3.14-5.63h0q-1.59-2.81-3.19-5.64-.46-.81-.94-1.64-.93-.03-1.83-.02-3.19-.04-6.39-.07-3.23-.04-6.48-.06-.94,0-1.88,0-.48.83-.96,1.66M234.16,55.36q-.59-.46-1.21-.9-.71-1.46-1.43-2.91-.79-1.55-1.54-2.98-.11-1.04-.21-1.97-.14-.92-.27-1.73.59.55,1.14,1.13.47.5.95,1.12.71,1.38,1.4,2.75.67,1.38,1.32,2.79.26.85.48,1.72.23.98.42,1.97-.51-.5-1.05-.98M226.94,40.93q.17,1.17.32,2.47.08,1.33.07,2.68.02.47,0,.86.36.65.72,1.31,1.15,2.16,2.24,4.24,1.1,2.2,2.16,4.42.27.58.59,1.26.28.12.6.34.94.56,1.81,1.16.74.54,1.4,1.11.17.16.34.34-.08-.43-.16-.88-.26-1.31-.64-2.7-.4-1.27-.88-2.5s0,0,.02,0c-1.8-4.26-3.86-8.37-6.16-12.34q.25.49.5.98-.45-.63-.93-1.24-.75-.83-1.56-1.63-.31-.32-.57-.55.08.34.15.68M211.16,151.77q.48-2.39.89-4.78.45-2.53.84-5.03,1.96-1.63,3.82-3.16,1.85-1.59,3.68-3.23,1.33.99,2.62,1.88,1.25.77,2.38,1.6-.47,2.33-.99,4.67-.52,2.25-1.04,4.41-1.65,1.65-3.27,3.17h0q-1.75,1.64-3.47,3.15-1.26-.61-2.58-1.28s0,0-.06.08q-1.39-.72-2.83-1.49M179.41,134.67q-2.39-1.35-4.83-2.73.11-2.98.22-6,.11-3.06.19-6.11,2.58-1.58,5.15-3.2,2.54-1.6,5.05-3.22,2.39,1.49,4.75,2.9s0,0,0,0q2.31,1.4,4.55,2.83-.12,2.93-.26,5.86-.18,2.94-.36,5.83-2.39,1.61-4.82,3.23h0q-2.44,1.57-4.93,3.17-2.33-1.28-4.72-2.57M237.94,123.86q.35-2.23.68-4.57.29-2.34.55-4.67.82-1.28,1.58-2.7.69-1.33,1.29-2.57.35.92.63,1.83.19.91.3,1.7-.29,2.19-.61,4.26-.33,1.95-.73,4.01-.43,1.37-.92,2.72-.58,1.44-1.22,2.87-.28-.65-.61-1.41h0q-.45-.67-.95-1.46M212.82,106.11q.07-4.05.09-8.09-.02-4.13-.09-8.18,2.62-1.93,5.12-3.78h0q2.38-1.84,4.62-3.66,2.35,2.11,4.57,4.16h0q2.09,1.97,4.05,3.93.09,3.71.12,7.53-.03,3.71-.12,7.41-1.96,1.97-4.05,3.94h0q-2.22,2.04-4.57,4.16-2.25-1.82-4.62-3.66h0q-2.51-1.85-5.12-3.77M240.76,84.04q-.77-1.42-1.58-2.7-.26-2.34-.55-4.67-.33-2.34-.68-4.56.5-.79.95-1.47h0q.33-.76.61-1.4.64,1.42,1.22,2.86.49,1.36.92,2.73.39,2.06.73,4.01.32,2.07.61,4.26-.11.79-.3,1.7-.27.91-.63,1.82-.6-1.24-1.29-2.57M180.14,79.34q-2.57-1.61-5.14-3.19-.08-3.05-.19-6.12-.12-3.02-.23-6,2.44-1.38,4.83-2.73,2.39-1.29,4.73-2.57,2.48,1.6,4.92,3.18h0q2.43,1.62,4.82,3.23.18,2.89.36,5.83.15,2.94.29,5.92-2.26,1.38-4.57,2.78h0q-2.36,1.42-4.75,2.9-2.52-1.62-5.06-3.22M216.63,41.5q1.72,1.51,3.47,3.15s0,0,0,0q1.62,1.52,3.27,3.17.52,2.16,1.04,4.41.52,2.34.99,4.67-1.13.83-2.38,1.6h0q-1.29.89-2.62,1.89-1.83-1.65-3.68-3.24h0q-1.86-1.53-3.82-3.16-.39-2.5-.84-5.02-.41-2.39-.88-4.79,1.44-.77,2.83-1.49.06.08.06.08,1.32-.67,2.58-1.28M214.48,36.71q-1.61.72-3.38,1.46-1.87.85-3.83,1.79-.46.24-.99.42.15.71.29,1.42.62,3.19,1.13,6.34.5,3.27.98,6.63.12.82.21,1.57.61.45,1.26.97,2.63,2.08,5.16,4.13h0q1.91,1.61,3.74,3.13.71,6.4,1.24,12.84-2.31,1.7-4.74,3.45-2.55,1.86-5.23,3.71-5.03-3.66-10.35-7.45-.16-2.96-.32-5.85-.24-3.73-.51-7.41-.09-.87-.14-1.69-.68-.46-1.4-.99-3.03-2.08-6.11-4.13h0q-3.16-2.11-6.36-4.19-.72-.45-1.44-.9-.69.36-1.36.72-3.06,1.56-6.11,3.26-3.2,1.67-6.39,3.44-.79.4-1.53.83.02.87.07,1.77.13,3.89.27,7.85.12,4,.21,8.01,0,.91.03,1.84.81.49,1.61.99,3.42,2.08,6.79,4.14,3.34,2.1,6.61,4.15.75.49,1.49.94.73-.43,1.46-.88,3.1-1.97,6.14-3.86,2.28-1.46,4.52-2.87,5.4,3.72,10.54,7.38.07,4.18.09,8.36-.03,4.16-.09,8.27-5.14,3.65-10.54,7.37-2.24-1.39-4.52-2.86-3.04-1.89-6.14-3.86-.73-.45-1.46-.88-.74.46-1.49.95-3.28,2.05-6.61,4.15-3.37,2.06-6.79,4.14-.81.5-1.61.98-.02.94-.03,1.85-.09,4.01-.21,8.01-.14,3.96-.27,7.85-.05.9-.07,1.77.75.43,1.54.83,3.19,1.77,6.39,3.44,3.05,1.7,6.11,3.26.68.36,1.32.77.77-.5,1.49-.95,3.2-2.08,6.37-4.17s0,0,0,0q3.07-2.05,6.1-4.14.72-.52,1.4-.99.06-.81.14-1.68.28-3.69.51-7.41.16-2.89.32-5.85,5.3-3.71,10.35-7.45,2.68,1.87,5.23,3.72,2.44,1.74,4.74,3.44-.55,6.53-1.24,12.84-1.82,1.52-3.74,3.14-2.53,2.04-5.17,4.12-.64.53-1.26.98-.08.75-.21,1.56-.48,3.37-.98,6.63-.56,3.23-1.12,6.34-.14.71-.29,1.42.52.17.98.42,1.97.94,3.83,1.78,1.72.83,3.38,1.47.36.15.72.29.48-.4,1.03-.89,2.25-2.06,4.4-4.09,2.05-2.02,4.06-4.12.44-.47.88-.94.18-.62.36-1.24.77-2.79,1.51-5.67.65-2.89,1.27-5.86.15-.72.28-1.43-.3-.22-.61-.46-1.4-1.08-2.9-2.29-1.27-.89-2.58-1.88.7-6.12,1.29-12.51,2.27-2.1,4.42-4.13h0q2.03-2.04,3.92-4.08,2.55,2.68,4.67,5.21-.25,2.41-.54,4.81-.41,3.05-.88,6.08-.1.63-.23,1.36.22.17.41.45.75,1.01,1.4,1.88.49.83.84,1.63l.14.28q.2-.4.42-.9.79-1.83,1.48-3.69.44-1.37.83-2.75c.94-3.83,1.68-7.75,2.2-11.73.08-.64.08-.64.17-1.4q.07-.55.14-1.21.02-.21.03-.44-.02-1.22-.2-2.33-.31-1.24-.74-2.58-.12-.33-.24-.67-.17.42-.34.74-.82,1.68-1.76,3.32-.81,1.31-1.69,2.6-2.01-2.53-4.46-5.3.09-3.61.13-7.23-.04-3.74-.13-7.36,2.44-2.76,4.46-5.3.88,1.29,1.69,2.6.94,1.65,1.76,3.32.17.32.34.74.12-.33.24-.67.43-1.34.74-2.57.17-1.13.2-2.34-.01-.22-.03-.44-.07-.65-.14-1.2c-.08-.65-.08-.66-.17-1.41-.53-3.98-1.27-7.89-2.2-11.72q-.39-1.39-.83-2.75-.69-1.86-1.48-3.7-.22-.5-.42-.9-.07.13-.14.28-.35.8-.84,1.63-.61.98-1.4,1.87-.18.28-.41.45.13.74.26,1.47.44,2.94.85,5.97.29,2.41.54,4.82-2.11,2.53-4.67,5.2-1.89-2.03-3.92-4.07h0q-2.15-2.03-4.42-4.14-.56-6.3-1.29-12.51,1.32-1,2.58-1.89,1.5-1.2,2.9-2.28.31-.23.61-.47-.14-.71-.28-1.42-.62-2.98-1.28-5.86-.73-2.89-1.5-5.67-.18-.62-.36-1.25-.44-.47-.88-.94-2.01-2.09-4.06-4.12-2.15-2.04-4.4-4.09-.55-.49-1.03-.89-.36.14-.72.28M145.41,53.54q-1.51-.84-3-1.67-.04-1.64-.06-3.26-.04-1.6-.04-3.2,1.44-.76,2.93-1.51,1.48-.76,2.9-1.51,1.5.82,3.03,1.65s0,0,0,0q1.46.81,2.95,1.64.08,1.6.14,3.19.06,1.61.12,3.24-1.48.76-2.95,1.55-1.47.79-2.96,1.58-1.53-.86-3.05-1.7M146.44,36.67q-2.22,1.1-4.47,2.22-2.22,1.15-4.51,2.31-.82.41-1.63.83.02.83.05,1.66.01,2.42.01,4.88-.01,2.49.01,5,0,.88,0,1.77.82.45,1.63.9,2.34,1.3,4.7,2.6,2.37,1.32,4.73,2.65.78.45,1.63.93.78-.45,1.58-.89,2.31-1.24,4.56-2.5s0,0,.04.02q2.24-1.23,4.46-2.44.78-.42,1.57-.82-.04-.88-.05-1.74-.11-2.5-.23-4.97-.12-2.43-.23-4.83-.06-.84-.08-1.65-.8-.45-1.61-.9-2.21-1.24-4.53-2.5-2.29-1.23-4.56-2.45-.81-.43-1.56-.83-.8.37-1.52.76M209.61,24.83q-.99-.8-2.06-1.67-.41-.94-.83-1.86-.37-.85-.83-1.76.61-.03,1.2-.04.5-.06.98-.09.99.83,1.91,1.61.98.85,1.88,1.64.5.87.99,1.75.4.81.85,1.71-.45.12-1,.18-.49.16-1.07.25-.97-.82-2.03-1.71M202.1,16.1q-.31.05-.72.04.28.49.47.93.64,1.36,1.23,2.75.63,1.49,1.21,2.99.2.53.4,1.08.57.43,1.15.87,1.64,1.28,3.26,2.58,1.61,1.32,3.14,2.6.56.48,1.12.97.3-.12.61-.24.91-.21,1.7-.46.75-.2,1.44-.36.23-.05.45-.1-.25-.49-.5-.99-.73-1.37-1.42-2.65-.73-1.24-1.5-2.47-.31-.46-.56-.83-.47-.45-.96-.91-1.29-1.18-2.68-2.43-1.41-1.21-2.83-2.41-.5-.42-1.01-.83-.26-.04-.52-.07-.8-.08-1.64-.1-.87.03-1.86.04M191.2,43.37q-1.89-.25-3.76-.45-1.13-1.72-2.29-3.45s0,0,0,0q-1.19-1.73-2.34-3.43.8-1.4,1.51-2.83.74-1.35,1.45-2.69,1.78.23,3.64.56,1.73.25,3.47.54,1.16,1.63,2.3,3.25,1.11,1.63,2.26,3.31-.6,1.39-1.24,2.79-.68,1.41-1.34,2.89-1.8-.23-3.65-.47M166.36,11.56q.55-.67,1.01-1.35.45-.66.91-1.3,1.17.16,2.44.36,1.18.18,2.36.38.7.79,1.48,1.63.76.84,1.52,1.69-.44.66-.88,1.34s0,0,0,0q-.45.69-.9,1.4-1.15-.14-2.38-.31-1.31-.2-2.52-.35-.71-.88-1.53-1.78h0q-.74-.86-1.49-1.71M163.98,5.76q-.83.97-1.56,2.04-.83,1.08-1.67,2.2-.32.44-.65.89.41.51.9,1.06,1.24,1.42,2.43,2.86s0,0,0,0q1.23,1.49,2.5,3.01.42.57.91,1.17.8.09,1.61.17,2.08.24,4.09.46,1.28.17,2.5.32,2.86,3.65,5.73,7.45-.77,1.31-1.49,2.69s0,0,0,0q-1.06,2.01-2.23,4.02-.32.62-.65,1.23.51.72.96,1.4,1.64,2.42,3.27,4.86,1.62,2.47,3.28,5.02.48.74.95,1.49.78.04,1.61.15,2.72.29,5.38.56,2.64.32,5.19.61.71.06,1.47.2.29-.62.57-1.24.89-2.15,1.79-4.16.82-2.02,1.62-3.94.23-.54.39-1.16-.4-.62-.85-1.31-1.61-2.35-3.13-4.57-1.56-2.22-3.17-4.43-.52-.68-.97-1.3-.64-.1-1.36-.26-2.44-.5-4.87-.93-1.79-.31-3.56-.59-2.88-3.71-5.72-7.27.42-.73.83-1.45.65-1.14,1.28-2.25.23-.41.47-.82-.48-.54-.96-1.08-1.16-1.33-2.45-2.69-1.22-1.3-2.4-2.54-.53-.5-.98-.97-.71-.13-1.41-.26-1.91-.35-3.72-.64-1.9-.3-3.87-.61-.7-.09-1.49-.21-.32.36-.55.76"/></clipPath>
+                  <linearGradient id="gs-tv" x1="-.14" y1="300.03" x2="1.14" y2="300.03" gradientTransform="translate(121.0147 32492.1037) scale(107.9705 -107.9705)" gradientUnits="userSpaceOnUse">
+                    <stop offset="0" stop-color="#2de2bf"/><stop offset=".2" stop-color="#1fceac"/><stop offset=".48" stop-color="#10b797"/><stop offset=".76" stop-color="#07a98a"/><stop offset="1" stop-color="#04a586"/>
+                  </linearGradient>
+                </defs>
+                <g clip-path="url(#cp-tv)"><rect fill="url(#gs-tv)" x="105.97" y="5" width="137.6" height="185.96"/></g>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-dots" id="heroDots">
+        <button class="hero-dot active"></button>
+        <button class="hero-dot"></button>
+        <button class="hero-dot"></button>
+        <button class="hero-dot"></button>
+      </div>
+
+      <!-- RADIO -->
+      <section>
+        <div class="sec-head">
+          <h2 class="sec-title">Rádios Online</h2>
+          <button class="sec-more" onclick="openRadioSheet()">Ver todas →</button>
+        </div>
+        <div class="radio-grid" id="radioGrid"></div>
+      </section>
+
+      <!-- TRACKS -->
+      <section>
+        <div class="sec-head">
+          <h2 class="sec-title">Mais Tocadas</h2>
+          <button class="sec-more">Ver ranking →</button>
+        </div>
+        <div class="tracks-list" id="tracksList"></div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- iOS INSTALL BANNER -->
+  <div class="ios-install-banner hidden" id="iosBanner" role="banner" aria-label="Instalar app">
+    <div class="ios-banner-icon"><img src="/icons/icon-192.png" alt="MVF Music"></div>
+    <div class="ios-banner-body">
+      <div class="ios-banner-title">Instalar MVF Music</div>
+      <div class="ios-banner-sub">
+        Toque em
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+        e depois <strong style="color:var(--t1)">Adicionar à Tela de Início</strong>
+      </div>
+    </div>
+    <button class="ios-banner-close" id="iosBannerClose" aria-label="Fechar">✕</button>
+    <div class="ios-banner-arrow"></div>
+  </div>
+
+  <!-- MINI PLAYER -->
+  <div class="mini-player" id="miniPlayer">
+    <div class="mini-prog"><div class="mini-prog-fill" id="miniProgFill" style="width:36.7%"></div></div>
+    <div class="mini-art" onclick="openFullPlayer()" ontouchend="openFullPlayer()" style="cursor:pointer"><canvas id="miniCanvas" width="88" height="88"></canvas></div>
+    <div class="mini-info" onclick="openFullPlayer()" ontouchend="openFullPlayer()" style="cursor:pointer">
+      <div class="mini-title" id="miniTitle" style="display:flex;align-items:center">
+        <span id="miniTitleText">Evidências</span>
+        <span class="mini-live-tag">AO VIVO</span>
+      </div>
+      <div class="mini-artist" id="miniArtist">Chitãozinho &amp; Xororó</div>
+    </div>
+    <div class="mini-btns">
+      <button class="mini-heart" id="miniHeartBtn" aria-label="Favoritar" onclick="event.stopPropagation();toggleLike()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </button>
+      <button class="mini-play" id="miniPlayBtn" aria-label="Play/Pause" onclick="event.stopPropagation();togglePlay()">
+        <svg id="miniPlayIcon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav">
+    <button class="nav-tab active" onclick="setTab(this)">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Início
+    </button>
+    <button class="nav-tab" onclick="setTab(this);openRadioSheet()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49M20.07 4.93a14 14 0 0 1 0 14.14m-16.14 0a14 14 0 0 1 0-14.14"/></svg>
+      Rádio
+    </button>
+    <button class="nav-tab" onclick="setTab(this);openTabSheet('buscar')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      Buscar
+    </button>
+    <button class="nav-tab" onclick="setTab(this);openTabSheet('biblioteca')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      Biblioteca
+    </button>
+    <button class="nav-tab" onclick="setTab(this);openTabSheet('perfil')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Perfil
+    </button>
+  </nav>
+
+  <!-- PLAYLIST MODAL -->
+  <div class="pl-modal" id="plModal" onclick="if(event.target===this)closePlModal()">
+    <div class="pl-sheet">
+      <div class="pl-sheet-head">
+        <span class="pl-sheet-title">Adicionar à playlist</span>
+        <button class="pl-sheet-close" onclick="closePlModal()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div id="plModalList"></div>
+      <div class="pl-create-row">
+        <input class="pl-create-input" id="plNewName" placeholder="Nome da nova playlist…" maxlength="40">
+        <button class="pl-create-btn" onclick="plCreateAndAdd()">Criar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB SHEET (Buscar / Biblioteca / Perfil) -->
+  <div class="tab-sheet" id="tabSheet">
+    <div class="tab-sheet-header">
+      <span class="tab-sheet-title" id="tabSheetTitle">Buscar</span>
+      <button class="rs-close" onclick="closeTabSheet()">✕</button>
+    </div>
+    <div class="tab-sheet-body" id="tabSheetBody"></div>
+  </div>
+
+  <!-- RADIO SHEET BACKDROP -->
+  <div class="rs-backdrop" id="rsBackdrop" onclick="closeRadioSheet()"></div>
+
+  <!-- RADIO SHEET -->
+  <div class="radio-sheet" id="radioSheet">
+    <div class="rs-handle"></div>
+    <div class="rs-header">
+      <span class="rs-title">Rádios Online</span>
+      <button class="rs-close" onclick="closeRadioSheet()" aria-label="Fechar">✕</button>
+    </div>
+    <div class="rs-list" id="radioSheetList"></div>
+  </div>
+
+  <!-- FULL SCREEN PLAYER -->
+  <div class="full-player" id="fullPlayer">
+    <div class="fp-handle"></div>
+    <div class="fp-top">
+      <button class="fp-close" onclick="closeFullPlayer()" aria-label="Fechar">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <span class="fp-label">Tocando Agora</span>
+      <button class="icon-btn" style="color:var(--t3)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+      </button>
+    </div>
+
+    <div class="fp-art">
+      <canvas id="fpCanvas" width="440" height="440"></canvas>
+    </div>
+
+    <div class="fp-yt-wrap">
+      <div id="ytPlayerDiv"></div>
+    </div>
+
+    <div class="fp-info">
+      <div>
+        <div class="fp-title" id="fpTitle">Evidências</div>
+        <div class="fp-artist" id="fpArtist">Chitãozinho &amp; Xororó</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:2px">
+        <button class="fp-pl-btn" id="fpPlBtn" onclick="openPlModal()" aria-label="Adicionar à playlist" title="Adicionar à playlist">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </button>
+        <button class="fp-heart" id="fpHeartBtn" onclick="toggleLike()">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="fp-live-row">
+      <div class="fp-live-dot"></div>
+      <span class="fp-live-text">AO VIVO</span>
+    </div>
+
+    <div class="fp-prog-wrap">
+      <div class="fp-prog-track" id="fpProgTrack">
+        <div class="fp-prog-fill" id="fpProgFill" style="width:36.7%"></div>
+      </div>
+      <div class="fp-times">
+        <span class="fp-time" id="fpCur">1:23</span>
+        <span class="fp-time" id="fpDur">3:47</span>
+      </div>
+    </div>
+
+    <div class="fp-controls">
+      <button class="fp-ctrl" id="fpShuffle" onclick="toggleShuffle()" aria-label="Aleatório">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg>
+      </button>
+      <button class="fp-ctrl" onclick="prevTrack()" aria-label="Anterior">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+      </button>
+      <button class="fp-play-btn" id="fpPlayBtn" onclick="togglePlay()" aria-label="Play/Pause">
+        <svg id="fpPlayIcon" width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </button>
+      <button class="fp-ctrl" onclick="nextTrack()" aria-label="Próxima">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+      </button>
+      <button class="fp-ctrl" id="fpRepeat" onclick="toggleRepeat()" aria-label="Repetir">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+      </button>
+    </div>
+
+    <div class="fp-vol">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="2" stroke-linecap="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/></svg>
+      <div class="fp-vol-track" id="fpVolTrack">
+        <div class="fp-vol-fill" id="fpVolFill" style="width:70%"></div>
+      </div>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="2" stroke-linecap="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+    </div>
+
+    <!-- EQUALIZER BARS -->
+    <div class="fp-eq" id="fpEq">
+      <div class="fp-eq-bar" style="--d:.55s;--h:22px"></div>
+      <div class="fp-eq-bar" style="--d:.40s;--h:14px"></div>
+      <div class="fp-eq-bar" style="--d:.68s;--h:28px"></div>
+      <div class="fp-eq-bar" style="--d:.45s;--h:10px"></div>
+      <div class="fp-eq-bar" style="--d:.72s;--h:24px"></div>
+      <div class="fp-eq-bar" style="--d:.38s;--h:18px"></div>
+      <div class="fp-eq-bar" style="--d:.60s;--h:30px"></div>
+      <div class="fp-eq-bar" style="--d:.48s;--h:12px"></div>
+      <div class="fp-eq-bar" style="--d:.65s;--h:26px"></div>
+      <div class="fp-eq-bar" style="--d:.42s;--h:16px"></div>
+      <div class="fp-eq-bar" style="--d:.57s;--h:20px"></div>
+      <div class="fp-eq-bar" style="--d:.50s;--h:8px"></div>
+      <div class="fp-eq-bar" style="--d:.63s;--h:24px"></div>
+      <div class="fp-eq-bar" style="--d:.35s;--h:14px"></div>
+      <div class="fp-eq-bar" style="--d:.70s;--h:28px"></div>
+      <div class="fp-eq-bar" style="--d:.44s;--h:18px"></div>
+      <div class="fp-eq-bar" style="--d:.58s;--h:22px"></div>
+      <div class="fp-eq-bar" style="--d:.41s;--h:10px"></div>
+      <div class="fp-eq-bar" style="--d:.66s;--h:26px"></div>
+      <div class="fp-eq-bar" style="--d:.53s;--h:16px"></div>
+    </div>
+
+    <!-- MVF LOGO HORIZONTAL (original completo) -->
+    <div class="fp-logo">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 556.62 222.5">
+        <defs>
+          <style>.hlr-8{fill:#fff}.hlr-6{fill:#89caef}</style>
+          <linearGradient id="hlr-g1" x1="207" y1="190.23" x2="209.46" y2="190.23" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#89caef"/><stop offset=".21" stop-color="#61aef1"/>
+            <stop offset=".43" stop-color="#4198f2"/><stop offset=".64" stop-color="#2a88f4"/>
+            <stop offset=".83" stop-color="#1c7ff4"/><stop offset="1" stop-color="#187cf5"/>
+          </linearGradient>
+          <linearGradient id="hlr-g2" x1="212.16" y1="190.22" x2="226.03" y2="190.22" xlink:href="#hlr-g1"/>
+          <linearGradient id="hlr-g3" x1="343.44" y1="190.24" x2="346.01" y2="190.24" gradientTransform="translate(534.51 -154.74) rotate(89.92)" xlink:href="#hlr-g1"/>
+          <linearGradient id="hlr-g4" x1="327.18" y1="190.26" x2="341.02" y2="190.26" xlink:href="#hlr-g1"/>
+          <linearGradient id="hlr-g5" x1="251.54" y1="190.8" x2="306.18" y2="190.8" xlink:href="#hlr-g1"/>
+          <linearGradient id="hlr-g6" x1="135.92" y1="140.79" x2="420.01" y2="140.79" xlink:href="#hlr-g1"/>
+          <linearGradient id="hlr-g7" x1="155.98" y1="190.26" x2="172.6" y2="190.26" xlink:href="#hlr-g1"/>
+          <linearGradient id="hlr-g8" x1="386.97" y1="191.33" x2="399.73" y2="191.33" xlink:href="#hlr-g1"/>
+          <linearGradient id="hlr-g9" x1="378.58" y1="189.27" x2="391.24" y2="189.27" xlink:href="#hlr-g1"/>
+        </defs>
+        <!-- MVF text -->
+        <path class="hlr-8" d="M6.98,66.01c0-10.34-.32-19.41-.64-26.57h24.03l1.11,9.71h.64c2.86-3.82,9.71-11.46,23.07-11.46,10.02,0,17.82,4.61,21.16,12.41h.32c3.18-3.98,6.68-7.16,10.82-9.23,3.98-2.07,8.59-3.18,13.84-3.18,16.87,0,26.57,12.25,26.57,33.89v46.15h-27.85v-41.85c0-9.71-2.86-15.28-9.23-15.28-4.61,0-7.48,3.02-8.75,6.68-.64,1.59-.8,4.14-.8,5.73v44.71h-27.85v-42.64c0-8.75-2.71-14.48-9.07-14.48-5.25,0-7.64,3.82-8.75,6.52-.8,1.75-.8,3.82-.8,5.73v44.87H6.98v-51.71Z"/>
+        <path class="hlr-8" d="M167.21,39.44l8.43,33.26c1.59,6.21,2.7,12.25,3.66,18.46h.48c.95-6.36,1.91-11.93,3.5-18.46l7.8-33.26h30.07l-28.48,78.29h-28.8l-27.85-78.29h31.19Z"/>
+        <path class="hlr-8" d="M240.88,117.73v-57.28h-10.02v-21h10.02v-2.71c0-8.59,3.02-19.25,10.18-25.62,6.52-6.05,15.43-8.12,22.75-8.12,5.41,0,9.55.48,13.21,1.43l-.64,21.96c-2.07-.64-4.46-.96-7.32-.96-6.21,0-9.71,4.46-9.71,10.18v3.82h14.32v21h-14v57.28h-28.8Z"/>
+        <!-- music text -->
+        <path class="hlr-6" d="M358.04,117.67h-5.15v-29.9c0-6.8-1.05-11.82-3.14-15.05-2.1-3.23-5.31-4.85-9.64-4.85-2.2,0-4.3.41-6.29,1.24-1.99.82-3.81,1.98-5.46,3.45-1.65,1.48-3.08,3.23-4.28,5.26-1.2,2.03-2.15,4.28-2.84,6.75v33.09h-5.15v-29.9c0-6.87-1.03-11.91-3.09-15.1-2.06-3.2-5.26-4.79-9.59-4.79-2.2,0-4.28.4-6.24,1.19-1.96.79-3.76,1.93-5.41,3.4-1.65,1.48-3.11,3.23-4.38,5.26-1.27,2.03-2.25,4.28-2.94,6.75v33.2h-5.15v-53.61h4.85v12.78c2.2-4.33,5.09-7.7,8.66-10.1,3.57-2.41,7.53-3.61,11.86-3.61s8.21,1.34,11.03,4.02c2.82,2.68,4.5,6.19,5.05,10.52,5.09-9.69,12.1-14.54,21.03-14.54,5.84,0,10.02,2.08,12.53,6.24,2.51,4.16,3.76,9.98,3.76,17.47v30.82Z"/>
+        <path class="hlr-6" d="M390.21,118.7c-11.41,0-17.11-7.9-17.11-23.71v-30.93h5.15v30.21c0,13.2,4.5,19.79,13.51,19.79,2.27,0,4.47-.39,6.6-1.19,2.13-.79,4.12-1.89,5.98-3.3,1.86-1.41,3.49-3.11,4.9-5.1,1.41-1.99,2.53-4.19,3.35-6.6v-33.82h5.15v46.39c0,1.72.72,2.58,2.16,2.58v4.64c-.34.07-.65.1-.93.1h-.62c-1.38,0-2.59-.43-3.66-1.29-1.07-.86-1.6-2.01-1.6-3.45v-8.04c-2.34,4.33-5.55,7.7-9.64,10.1-4.09,2.41-8.51,3.61-13.25,3.61Z"/>
+        <path class="hlr-6" d="M451.14,118.7c-4.12,0-8.08-.69-11.86-2.06-3.78-1.37-7.08-3.44-9.9-6.19l2.58-3.51c2.89,2.61,5.88,4.54,8.97,5.77,3.09,1.24,6.5,1.86,10.21,1.86,4.67,0,8.44-.98,11.29-2.94,2.85-1.96,4.28-4.69,4.28-8.2,0-1.65-.36-3.04-1.08-4.18-.72-1.13-1.8-2.1-3.25-2.89-1.44-.79-3.23-1.49-5.36-2.11-2.13-.62-4.61-1.27-7.42-1.96-3.03-.69-5.65-1.37-7.89-2.06-2.23-.69-4.07-1.51-5.51-2.47-1.44-.96-2.53-2.13-3.25-3.5-.72-1.37-1.08-3.13-1.08-5.26,0-2.68.51-5.02,1.55-7.01,1.03-1.99,2.46-3.64,4.28-4.95,1.82-1.3,3.92-2.28,6.29-2.94s4.9-.98,7.58-.98c4.19,0,7.9.71,11.13,2.11,3.23,1.41,5.74,3.21,7.53,5.41l-2.89,2.78c-1.79-2.06-4.11-3.61-6.96-4.64-2.85-1.03-5.89-1.55-9.12-1.55-1.99,0-3.87.21-5.62.62-1.75.41-3.28,1.07-4.59,1.96-1.31.89-2.34,2.05-3.09,3.45-.76,1.41-1.13,3.08-1.13,5,0,1.58.26,2.85.77,3.81.52.96,1.34,1.79,2.47,2.47,1.13.69,2.59,1.29,4.38,1.8,1.79.52,3.92,1.08,6.39,1.7,3.37.82,6.36,1.62,8.97,2.37,2.61.76,4.79,1.68,6.55,2.78s3.09,2.41,4.02,3.92c.93,1.51,1.39,3.44,1.39,5.77,0,4.81-1.87,8.64-5.62,11.5-3.75,2.85-8.75,4.28-15,4.28Z"/>
+        <path class="hlr-6" d="M483.71,51.9v-9.48h5.15v9.48h-5.15ZM483.71,117.67v-53.61h5.15v53.61h-5.15Z"/>
+        <path class="hlr-6" d="M501.34,90.66c0-3.78.65-7.35,1.96-10.72,1.3-3.37,3.13-6.29,5.46-8.76,2.34-2.47,5.12-4.43,8.35-5.88,3.23-1.44,6.77-2.17,10.62-2.17,4.88,0,9.18,1.1,12.89,3.3,3.71,2.2,6.49,5.26,8.35,9.18l-5.05,1.65c-1.58-2.95-3.83-5.27-6.75-6.96-2.92-1.68-6.13-2.53-9.64-2.53-2.96,0-5.71.58-8.25,1.75-2.54,1.17-4.76,2.78-6.65,4.85s-3.39,4.49-4.48,7.27c-1.1,2.78-1.65,5.79-1.65,9.02s.57,6.27,1.7,9.12c1.13,2.85,2.64,5.33,4.54,7.42,1.89,2.1,4.12,3.76,6.7,5,2.58,1.24,5.31,1.86,8.2,1.86,1.86,0,3.69-.27,5.52-.82,1.82-.55,3.51-1.27,5.05-2.17,1.55-.89,2.89-1.94,4.02-3.14,1.13-1.2,1.91-2.46,2.32-3.76l5.05,1.44c-.69,1.86-1.74,3.59-3.14,5.21-1.41,1.62-3.08,3.01-5,4.18-1.93,1.17-4.06,2.08-6.39,2.73-2.34.65-4.74.98-7.22.98-3.78,0-7.29-.74-10.51-2.22-3.23-1.48-6.03-3.51-8.4-6.08-2.37-2.58-4.23-5.55-5.57-8.92-1.34-3.37-2.01-6.98-2.01-10.82Z"/>
+        <!-- icon section -->
+        <rect fill="url(#hlr-g1)" x="207" y="179.68" width="2.46" height="21.11"/>
+        <polygon fill="url(#hlr-g2)" points="226.03 200.99 212.16 190.25 225.99 179.44 226.03 200.99"/>
+        <rect fill="url(#hlr-g3)" x="334.17" y="188.97" width="21.12" height="2.54" transform="translate(154.03 534.71) rotate(-89.92)"/>
+        <polygon fill="url(#hlr-g4)" points="341.02 190.22 327.18 201.04 327.18 179.48 341.02 190.22"/>
+        <path fill="url(#hlr-g5)" d="M278.86,163.5c-15.09,0-27.32,12.22-27.32,27.3s12.23,27.29,27.32,27.29,27.32-12.22,27.32-27.29-12.23-27.3-27.32-27.3ZM272.82,205.27l-.07-29.85,19.12,14.96-19.05,14.9Z"/>
+        <path fill="url(#hlr-g6)" d="M419.92,139.58l-201.38-.11c-.6-2.54-2.7-4.38-4.96-4.72-2.7-.4-5,.73-6.43,3.03l-69.04.02c-1.58,0-2.33,1.59-2.18,2.77.18,1.35,1.21,2.2,2.77,2.2l67.98-.02c1.06,2.79,3.6,4.39,6.44,4.13,2.66-.24,4.86-2.19,5.5-5.18l26.35.29h61.94s112.88.08,112.88.08c.33-.78.2-1.56.13-2.5Z"/>
+        <path fill="url(#hlr-g7)" d="M168.64,196.93c-.23.14-.81-.72-.68-.96.15-.27.58-.52,1-1.04-2.27-.25-4.16-.97-5.6-3.17-1.53,2.35-4.34,3.42-7.09,2.81-.36-.1-.2-1.34.27-1.32,1.99.57,5.88-.63,5.8-3.13s-4.04-3.21-5.9-3.23c-.54-.1-.54-.9-.37-1.27,2.71-.18,5.55.65,7.35,3.01,1.45-1.85,3.39-3.02,5.84-3.03-.43-.55-.77-.78-.94-1.06-.16-.27.57-1.14.82-.94l3.45,2.83-3.71,3.08c-.35.07-1.06-.76-.78-1.1.32-.38,1.3-.67,1.28-1.29-1.74-.41-4.94,1.21-4.89,3.19.06,2.27,3.13,3.38,4.97,3.05l-1.34-1.54c-.2-.22.65-1.02.95-.78l3.44,2.79-3.88,3.09Z"/>
+        <path fill="url(#hlr-g8)" d="M386.97,196.79l2.98-2.66c.21-.19.62-.43.85-.4.26.03.67.44.71.73.04.25-.44.59-.86.97,3.03.91,6.25-.85,6.96-3.98.71-3.13-1.65-6.22-5.05-6.45-.25-.7-.23-1.35-.02-1.98,4.51.09,7.64,3.99,7.14,8.17-.53,4.44-4.71,7.23-9.27,6.31.11.64.7.76.85.98.25.38-.18.93-.68,1.16l-3.61-2.85Z"/>
+        <path fill="url(#hlr-g9)" d="M385.77,195.63c.26.61.19,1.24.09,2-4.33-.02-7.58-3.69-7.26-7.82.34-4.34,4.08-7.29,8.55-6.76.17.02.49-.04.7-.08.68-.12-.87-.72-.95-1.11-.07-.32.28-.73.51-.88.39-.26.67.08.99.37l2.83,2.48-3.25,2.68c-.29.24-.58.39-.85.19-.16-.12-.46-.37-.48-.67s.34-.56.8-.87c-3.02-.69-6.13,1.02-6.75,4.06-.62,3.06,1.53,6.27,5.07,6.4Z"/>
+      </svg>
+    </div>
+  </div>
+
+  <audio id="radioAudio" preload="none"></audio>
+
+</div>
+
+<script>
+// ── AUDIO CONTEXT UNLOCK ──
+// Uses a SEPARATE temporary element so it never interferes with the radio audio.
+(function(){
+  const SILENT = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA';
+  function unlock() {
+    const tmp = new Audio(SILENT);
+    tmp.muted = true;
+    tmp.play().then(function(){ tmp.pause(); }).catch(function(){});
+  }
+  document.addEventListener('touchstart', unlock, {once:true, passive:true});
+  document.addEventListener('click',      unlock, {once:true});
+})();
+
+// ── DATA ──
+const allRadios = [
+  {id:'r1', name:'Jovem Pan FM', genre:'Pop & Notícias',   freq:'100.9 FM', color:'#cc0000', abbr:'JP',
+   logo:'https://jovempan.com.br/wp-content/themes/42wp-jovem-pan/assets/img/logo-white.png',
+   stream:'https://stream.zeno.fm/c45wbq2us3buv'},
+  {id:'r8', name:'Antena 1',    genre:'Clássicos & Rock', freq:'94.7 FM',  color:'#ffffff', abbr:'A1',
+   logo:'/ANTENA 1.png',
+   stream:'https://antenaone.crossradio.com.br/stream/1'},
+  {id:'r9', name:'Guarani FM',     genre:'Sertanejo & Regional', freq:'88.9 FM', color:'#ffffff', abbr:'GF',
+   logo:'/GUARANI FM.png',
+   stream:'https://azura2.cmaudioevideo.com:8100/radio.mp3'},
+  {id:'r10', name:'Conquista FM',  genre:'Sertanejo & Pop',      freq:'92.5 FM', color:'#ffffff', abbr:'CF',
+   logo:'/CONQUISTA FM.png',
+   stream:'https://8360.brasilstream.com.br/stream'},
+  {id:'r11', name:'Rádio Povo',      genre:'Popular & Regional',   freq:'99.5 FM', color:'#ffffff', abbr:'PV',
+   logo:'/RADIO POVO.png',
+   stream:'http://s02.transmissaodigital.com:7322/stream'},
+  {id:'r12', name:'Cidade FM',       genre:'Pop & Sertanejo',       freq:'94.3 FM', color:'#ff6400', abbr:'CI',
+   logo:'/CIDADE FM.png',
+   stream:'https://stm2.voxcast.com.br:7130/stream'},
+  {id:'r13', name:'Fascinação FM',   genre:'Sertanejo & Forró',     freq:'92.3 FM', color:'#9e1007', abbr:'FA',
+   logo:'/FASCINAÇÃO FM.png',
+   stream:'https://hts09.brascast.com:8320/live'},
+  {id:'r14', name:'Canaã FM',        genre:'Gospel & MPB',          freq:'Web',      color:'#ffffff', abbr:'CN',
+   logo:'/CANAÃ FM.png',
+   stream:'https://servidor39-2.brlogic.com:7186/live'},
+  {id:'r15', name:'Ipiaú FM',        genre:'Sertanejo & Regional',  freq:'91.1 FM',  color:'#ffffff', abbr:'IP',
+   logo:'/IPIAU FM.png',
+   stream:'https://stream2.svrdedicado.org:7116/stream'},
+  {id:'r16', name:'Rádio Ubatã',     genre:'Sertanejo & Pop',       freq:'91.9 FM',  color:'#ffffff', abbr:'UB',
+   logo:'/UBATÃ FM.png',
+   stream:'https://9095.brasilstream.com.br/stream'},
+];
+const radios = allRadios;
+
+const tracks = [
+  {id:1, title:'Evidências',        artist:'Chitãozinho & Xororó', dur:227, c:['#0d3f6e','#187cf5']},
+  {id:2, title:'Garota de Ipanema', artist:'Tom Jobim',             dur:205, c:['#071628','#4198f2']},
+  {id:3, title:'Como uma Onda',     artist:'Lulu Santos',           dur:252, c:['#0a2550','#89caef']},
+  {id:4, title:'Asa Branca',        artist:'Luiz Gonzaga',          dur:178, c:['#050d18','#1c7ff4']},
+  {id:5, title:'Tempo Perdido',     artist:'Legião Urbana',         dur:302, c:['#0d2240','#2a88f4']},
+];
+
+// ── STATE ──
+let isPlaying = false;
+let currentTime = 83;
+let currentTrackIdx = 0;
+let currentRadioId = null;
+let shuffle = false, repeat = false, liked = false;
+let rafId = null, lastTs = null;
+
+// ── HELPERS ──
+function fmt(s){ return `${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,'0')}`; }
+
+// ── CANVAS ART ──
+function drawArt(canvas, colors, style) {
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width, h = canvas.height;
+  const cx = w/2, cy = h/2;
+
+  const g = ctx.createLinearGradient(0, 0, w, h);
+  g.addColorStop(0, colors[0]);
+  g.addColorStop(1, colors[1]);
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, w, h);
+
+  if (style === 'vinyl') {
+    for (let r = 16; r < w * 0.52; r += 14) {
+      ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2);
+      ctx.strokeStyle = `rgba(137,202,239,${Math.max(0,0.3 - r/(w*1.5))})`;
+      ctx.lineWidth = 1.2; ctx.stroke();
+    }
+    const gr = ctx.createRadialGradient(cx,cy,0,cx,cy,w*0.2);
+    gr.addColorStop(0,'#89caef'); gr.addColorStop(0.5,'#187cf5'); gr.addColorStop(1,'#0d3f6e');
+    ctx.beginPath(); ctx.arc(cx,cy,w*0.2,0,Math.PI*2); ctx.fillStyle=gr; ctx.fill();
+    const ts = w*0.07;
+    ctx.fillStyle='rgba(255,255,255,0.88)';
+    ctx.beginPath();
+    ctx.moveTo(cx-ts*.7,cy-ts); ctx.lineTo(cx-ts*.7,cy+ts); ctx.lineTo(cx+ts*.9,cy);
+    ctx.closePath(); ctx.fill();
+  } else {
+    ctx.globalAlpha=0.22;
+    ctx.beginPath(); ctx.arc(w*.8,h*.18,w*.45,0,Math.PI*2); ctx.fillStyle='#89caef'; ctx.fill();
+    ctx.beginPath(); ctx.arc(w*.2,h*.78,w*.32,0,Math.PI*2); ctx.fillStyle='#187cf5'; ctx.fill();
+    ctx.globalAlpha=1;
+    ctx.beginPath(); ctx.arc(cx,cy,w*.09,0,Math.PI*2);
+    ctx.fillStyle='rgba(137,202,239,0.5)'; ctx.fill();
+  }
+}
+
+// ── RENDER RADIO CARDS ──
+const rGrid = document.getElementById('radioGrid');
+radios.forEach(r => {
+  const bars = Array.from({length:8},()=>'<div class="wave-bar"></div>').join('');
+  const div = document.createElement('div');
+  div.className = 'radio-card';
+  div.dataset.id = r.id;
+  div.innerHTML = `
+    <div class="live-dot"><span>AO VIVO</span></div>
+    <div class="radio-mark" style="background:${r.color}">${r.logo ? `<img src="${encodeURI(r.logo)}" alt="${r.name}" onerror="this.style.display='none';this.parentElement.appendChild(document.createTextNode('${r.abbr}'))">` : r.abbr}</div>
+    <div class="radio-name">${r.name}</div>
+    <div class="radio-genre">${r.genre}</div>
+    <div class="radio-freq">${r.freq}</div>
+    <div class="wave-bars">${bars}</div>`;
+  div.addEventListener('click', () => playRadio(r, div));
+  rGrid.appendChild(div);
+});
+
+// ── RENDER TRACKS (YouTube trending) ──
+var trendingItems = null; // global so hero button can access it
+
+const tList = document.getElementById('tracksList');
+tList.innerHTML = '<div style="padding:24px 0;text-align:center;color:var(--t3);font-size:13px">Carregando mais tocadas…</div>';
+
+function buildYtQueue(items) {
+  return items.map(function(it) { return {
+    videoId:   it.id,
+    title:     decodeHtml(it.snippet.title),
+    artist:    decodeHtml(it.snippet.channelTitle),
+    thumbnail: ((it.snippet.thumbnails.medium || it.snippet.thumbnails.default) || {}).url || ''
+  }; });
+}
+
+(async function loadYtTrending() {
+  const key = getYtApiKey();
+  if (!key) { renderLocalTracks(); return; }
+  try {
+    const url = 'https://www.googleapis.com/youtube/v3/videos?part=snippet&chart=mostPopular&regionCode=BR&videoCategoryId=10&maxResults=12&key=' + encodeURIComponent(key);
+    const res  = await fetch(url);
+    const data = await res.json();
+    if (data.error || !data.items || !data.items.length) { renderLocalTracks(); return; }
+    tList.innerHTML = '';
+    const items = data.items;
+    trendingItems = items;
+    // update hero subtitle with real count
+    const heroSub = document.querySelector('.hero-sub');
+    if (heroSub) heroSub.textContent = items.length + ' músicas em alta no Brasil';
+    items.forEach(function(item, i) {
+      const vid     = item.id;
+      const title   = decodeHtml(item.snippet.title);
+      const channel = decodeHtml(item.snippet.channelTitle);
+      const thumb   = ((item.snippet.thumbnails.medium || item.snippet.thumbnails.default) || {}).url || '';
+      const div = document.createElement('div');
+      div.className = 'track-row';
+      div.dataset.idx = i;
+      div.innerHTML = `
+        <div class="track-num">${i+1}</div>
+        <div class="track-thumb"><img src="${thumb}" width="44" height="44" alt="" loading="lazy" style="display:block;width:100%;height:100%;object-fit:cover;border-radius:6px"></div>
+        <div class="track-info">
+          <div class="track-title">${title}</div>
+          <div class="track-artist">${channel}</div>
+        </div>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" style="color:var(--t3);flex-shrink:0"><polygon points="5 3 19 12 5 21 5 3"/></svg>`;
+      div.onclick = function() {
+        ytQueue = buildYtQueue(items);
+        ytQueueIdx = i;
+        playYouTube(vid, title, channel, thumb);
+        openFullPlayer();
+      };
+      tList.appendChild(div);
+    });
+  } catch(e) { renderLocalTracks(); }
+})();
+
+function renderLocalTracks() {
+  tList.innerHTML = '';
+  tracks.forEach(function(t, i) {
+    const c = document.createElement('canvas');
+    c.width = 88; c.height = 88;
+    drawArt(c, t.c, 'album');
+    const img = c.toDataURL();
+    const div = document.createElement('div');
+    div.className = 'track-row';
+    div.dataset.idx = i;
+    div.innerHTML = `
+      <div class="track-num">${i+1}</div>
+      <div class="track-thumb"><img src="${img}" width="44" height="44" alt="" style="display:block;width:100%;height:100%"></div>
+      <div class="track-info">
+        <div class="track-title">${t.title}</div>
+        <div class="track-artist">${t.artist}</div>
+      </div>
+      <div class="track-dur">${fmt(t.dur)}</div>`;
+    div.addEventListener('click', function() { playTrackAt(i); });
+    tList.appendChild(div);
+  });
+}
+
+// ── DRAW INITIAL CANVASES ──
+drawArt(document.getElementById('heroCanvas'), ['#0d3f6e','#187cf5'], 'vinyl');
+drawArt(document.getElementById('miniCanvas'), tracks[0].c, 'album');
+drawArt(document.getElementById('fpCanvas'),   tracks[0].c, 'vinyl');
+
+// ── PLAYER LOGIC ──
+const PLAY  = `<svg id="miniPlayIcon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>`;
+const PAUSE = `<svg id="miniPlayIcon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>`;
+const FP_PLAY  = `<svg id="fpPlayIcon" width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>`;
+const FP_PAUSE = `<svg id="fpPlayIcon" width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>`;
+
+function updateUI() {
+  const t = currentRadioId ? null : tracks[currentTrackIdx];
+  const dur = t ? t.dur : Infinity;
+  const pct = t ? Math.min(100,(currentTime/dur)*100) : 0;
+  const pctStr = pct.toFixed(1)+'%';
+
+  document.getElementById('miniProgFill').style.width = pctStr;
+  document.getElementById('fpProgFill').style.width   = pctStr;
+  document.getElementById('fpCur').textContent = fmt(currentTime);
+  if (t) document.getElementById('fpDur').textContent = fmt(dur);
+}
+
+function showMiniPlayer() {
+  document.getElementById('appShell').classList.remove('noplayer');
+}
+
+function setPlaying(p) {
+  isPlaying = p;
+  if (p) showMiniPlayer();
+  document.getElementById('miniPlayBtn').innerHTML = p ? PAUSE : PLAY;
+  document.getElementById('fpPlayBtn').innerHTML   = p ? FP_PAUSE : FP_PLAY;
+  document.getElementById('fullPlayer').classList.toggle('playing', p);
+  if ('mediaSession' in navigator) {
+    navigator.mediaSession.playbackState = p ? 'playing' : 'paused';
+  }
+}
+
+function tick(ts) {
+  if (!isPlaying || currentRadioId) return;
+  if (lastTs !== null) {
+    currentTime += (ts - lastTs) / 1000;
+    const dur = tracks[currentTrackIdx].dur;
+    if (currentTime >= dur) {
+      repeat ? (currentTime = 0) : nextTrack();
+      return;
+    }
+    updateUI();
+  }
+  lastTs = ts;
+  rafId = requestAnimationFrame(tick);
+}
+
+function togglePlay() {
+  if (ytCurrentVideoId && ytPlayer && ytReady) {
+    try {
+      if (isPlaying) ytPlayer.pauseVideo(); else ytPlayer.playVideo();
+    } catch(e) {}
+    return;
+  }
+  if (currentRadioId) {
+    const audio = document.getElementById('radioAudio');
+    if (isPlaying) { audio.pause(); setPlaying(false); }
+    else { audio.play().catch(() => {}); setPlaying(true); }
+    return;
+  }
+  if (rafId) cancelAnimationFrame(rafId);
+  setPlaying(!isPlaying);
+  if (isPlaying) { lastTs = null; rafId = requestAnimationFrame(tick); }
+}
+
+var _msArtwork = '/icons/icon-512.png';
+
+function setNowPlaying(title, artist, artColors, artStyle, artworkUrl) {
+  document.getElementById('miniTitleText').textContent = title;
+  document.getElementById('miniArtist').textContent    = artist;
+  document.getElementById('fpTitle').textContent       = title;
+  document.getElementById('fpArtist').textContent      = artist;
+  drawArt(document.getElementById('miniCanvas'), artColors, 'album');
+  drawArt(document.getElementById('fpCanvas'), artColors, artStyle||'vinyl');
+  if (artworkUrl) _msArtwork = artworkUrl;
+  if ('mediaSession' in navigator) {
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title:  title,
+      artist: artist,
+      album:  'MVF Music',
+      artwork: [{ src: _msArtwork, sizes: '512x512', type: 'image/png' }]
+    });
+  }
+}
+
+function _initMediaSession() {
+  if (!('mediaSession' in navigator)) return;
+  navigator.mediaSession.setActionHandler('play',          () => togglePlay());
+  navigator.mediaSession.setActionHandler('pause',         () => togglePlay());
+  navigator.mediaSession.setActionHandler('stop',          () => togglePlay());
+  navigator.mediaSession.setActionHandler('nexttrack',     () => nextTrack());
+  navigator.mediaSession.setActionHandler('previoustrack', () => prevTrack());
+}
+_initMediaSession();
+
+function setLiveMode(on) {
+  document.getElementById('miniPlayer').classList.toggle('live', on);
+  document.getElementById('fullPlayer').classList.toggle('live', on);
+}
+
+function stopYouTube() {
+  if (ytChkInterval) { clearInterval(ytChkInterval); ytChkInterval = null; }
+  if (ytPlayer) { try { ytPlayer.destroy(); } catch(e) {} }
+  ytPlayer = null; ytReady = false;
+  ytCurrentVideoId = null; ytQueue = []; ytQueueIdx = 0;
+  stopYtProgress();
+  document.getElementById('fullPlayer').classList.remove('yt-mode');
+  if (window._bgAudioStop) _bgAudioStop();
+}
+
+function playTrackAt(idx) {
+  if (rafId) cancelAnimationFrame(rafId);
+  clearReconnectHandlers();
+  const audio = document.getElementById('radioAudio');
+  if (!audio.paused) { audio.pause(); audio.removeAttribute('src'); }
+  stopYouTube();
+  setLiveMode(false);
+  currentTrackIdx = idx;
+  currentTime = 0;
+  currentRadioId = null;
+
+  const t = tracks[idx];
+  setNowPlaying(t.title, t.artist, t.c, 'vinyl');
+  document.getElementById('fpDur').textContent = fmt(t.dur);
+
+  document.querySelectorAll('.track-row').forEach((r,i) => r.classList.toggle('playing', i===idx));
+  document.querySelectorAll('.radio-card').forEach(c => c.classList.remove('active'));
+
+  setPlaying(true);
+  lastTs = null;
+  rafId = requestAnimationFrame(tick);
+}
+
+// ── RADIO RECONNECT ──
+var _rcTimer = null;
+var _rcAttempts = 0;
+var _rcCleanup = null;
+
+function clearReconnectHandlers() {
+  if (_rcCleanup) { _rcCleanup(); _rcCleanup = null; }
+  clearTimeout(_rcTimer);
+}
+
+function setupReconnect(r, px) {
+  clearReconnectHandlers();
+  _rcAttempts = 0;
+  var _stableTimer = null;
+  var audio = document.getElementById('radioAudio');
+
+  function reconnect() {
+    if (currentRadioId !== r.id) return;
+    clearTimeout(_stableTimer);
+    _rcAttempts++;
+    if (_rcAttempts > 8) {
+      document.getElementById('miniArtist').textContent = 'Rádio indisponível';
+      document.getElementById('fpArtist').textContent   = 'Rádio indisponível';
+      setPlaying(false);
+      clearReconnectHandlers();
+      return;
+    }
+    document.getElementById('miniArtist').textContent = 'Reconectando… (' + _rcAttempts + '/8)';
+    document.getElementById('fpArtist').textContent   = 'Reconectando… (' + _rcAttempts + '/8)';
+    clearTimeout(_rcTimer);
+    _rcTimer = setTimeout(function() {
+      if (currentRadioId !== r.id) return;
+      audio.pause();
+      audio.src = '';
+      setTimeout(function() {
+        if (currentRadioId !== r.id) return;
+        audio.src = typeof px === 'function' ? px(r.stream) : r.stream;
+        audio.play().catch(function(){});
+      }, 800);
+    }, Math.min(_rcAttempts * 3000, 15000));
+  }
+
+  function onError()   { if (currentRadioId !== r.id) { clearReconnectHandlers(); return; } clearTimeout(_rcTimer); clearTimeout(_stableTimer); _rcTimer = setTimeout(reconnect, 3000); }
+  // stalled = buffering normal em live stream; só reconecta após 40s sem dados
+  function onStalled() { if (currentRadioId !== r.id) { clearReconnectHandlers(); return; } clearTimeout(_rcTimer); clearTimeout(_stableTimer); _rcTimer = setTimeout(reconnect, 40000); }
+  function onResumed() {
+    if (currentRadioId !== r.id) { clearReconnectHandlers(); return; }
+    clearTimeout(_rcTimer);
+    // só zera tentativas se ficar estável por 30s seguidos
+    clearTimeout(_stableTimer);
+    _stableTimer = setTimeout(function() { if (currentRadioId === r.id) _rcAttempts = 0; }, 30000);
+    document.getElementById('miniArtist').textContent = r.genre + ' · ' + r.freq;
+    document.getElementById('fpArtist').textContent   = r.genre + ' · ' + r.freq;
+  }
+
+  audio.addEventListener('error',   onError);
+  audio.addEventListener('stalled', onStalled);
+  audio.addEventListener('playing', onResumed);
+  _rcCleanup = function() {
+    audio.removeEventListener('error',   onError);
+    audio.removeEventListener('stalled', onStalled);
+    audio.removeEventListener('playing', onResumed);
+    clearTimeout(_rcTimer);
+    clearTimeout(_stableTimer);
+  };
+}
+
+function playRadio(r, el) {
+  if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+  clearReconnectHandlers();
+  stopYouTube();
+
+  const audio = document.getElementById('radioAudio');
+  if (!audio.paused) { audio.pause(); audio.removeAttribute('src'); }
+
+  currentRadioId = r.id;
+  currentTime = 0;
+
+  setNowPlaying(r.name, 'Conectando...', ['#0d3f6e', r.color], 'vinyl', r.logo || '/icons/icon-512.png');
+  if (r.logo) {
+    const li = new Image();
+    li.crossOrigin = 'anonymous';
+    li.onload = function() {
+      [['miniCanvas',88],['fpCanvas',440]].forEach(([id,sz]) => {
+        const c = document.getElementById(id);
+        const ctx = c.getContext('2d');
+        ctx.fillStyle = r.color;
+        ctx.fillRect(0,0,sz,sz);
+        const pad = sz * 0.08;
+        ctx.drawImage(li, pad, pad, sz - pad*2, sz - pad*2);
+      });
+    };
+    li.src = encodeURI(r.logo);
+  }
+  setLiveMode(true);
+  document.getElementById('miniProgFill').style.width = '0%';
+  document.getElementById('fpProgFill').style.width   = '0%';
+
+  document.querySelectorAll('.track-row').forEach(row => row.classList.remove('playing'));
+  document.querySelectorAll('.radio-card').forEach(c  => c.classList.remove('active'));
+  if (el && el.classList.contains('radio-card')) el.classList.add('active');
+
+  setPlaying(true);
+
+  function tryStream(url, fallbackUrl) {
+    audio.src = url;
+    let settled = false;
+
+    const done = () => {
+      if (settled) return true;
+      settled = true;
+      clearTimeout(tid);
+      audio.removeEventListener('playing', onPlaying);
+      audio.removeEventListener('error',   onErr);
+      return false;
+    };
+
+    const onPlaying = () => {
+      if (done()) return;
+      document.getElementById('miniArtist').textContent = r.genre + ' · ' + r.freq;
+      document.getElementById('fpArtist').textContent   = r.genre + ' · ' + r.freq;
+      document.querySelectorAll('.rs-item').forEach(x => x.classList.toggle('active', x.dataset.id === r.id));
+      setupReconnect(r, px);
+    };
+
+    const onErr = () => {
+      if (done()) return;
+      if (fallbackUrl) { tryStream(fallbackUrl, null); return; }
+      const code = audio.error ? audio.error.code : '?';
+      document.getElementById('miniArtist').textContent = 'Indisponível (cod.' + code + ')';
+      document.getElementById('fpArtist').textContent   = 'Indisponível (cod.' + code + ')';
+      setPlaying(false);
+      if (el && el.classList.contains('radio-card')) el.classList.remove('active');
+      document.querySelectorAll('.rs-item').forEach(x => x.classList.remove('active'));
+    };
+
+    const tid = setTimeout(() => {
+      if (done()) return;
+      if (fallbackUrl) { tryStream(fallbackUrl, null); return; }
+      document.getElementById('miniArtist').textContent = 'Lento… tente outra rádio';
+      document.getElementById('fpArtist').textContent   = 'Lento… tente outra rádio';
+      setPlaying(false);
+      if (el && el.classList.contains('radio-card')) el.classList.remove('active');
+      currentRadioId = null;
+    }, 20000);
+
+    audio.addEventListener('playing', onPlaying);
+    audio.addEventListener('error',   onErr);
+
+    audio.play().catch(function(err) {
+      if (err.name === 'NotAllowedError') {
+        if (done()) return;
+        document.getElementById('miniArtist').textContent = 'Toque o play para ouvir';
+        document.getElementById('fpArtist').textContent   = 'Toque o play para ouvir';
+        setPlaying(false);
+      } else if (err.name !== 'AbortError') {
+        onErr();
+      }
+    });
+  }
+
+  // On localhost: route streamtheworld through local Node.js proxy (bypasses referer block).
+  // On any other host (Netlify, etc.): try the stream directly — real domains are usually allowed.
+  var isLocalhost = (location.hostname === 'localhost' || location.hostname === '127.0.0.1');
+  var px = function(u) {
+    if (!u || !u.includes('streamtheworld.com')) return u;
+    return isLocalhost
+      ? 'http://localhost:3000/radio-stream?url=' + encodeURIComponent(u)
+      : u;
+  };
+  tryStream(px(r.stream), px(r.stream2) || null);
+}
+
+function nextTrack() {
+  if (currentRadioId) return; // next/prev não faz sentido no modo rádio
+  if (ytCurrentVideoId && ytQueue.length > 1) {
+    ytQueueIdx = (ytQueueIdx + 1) % ytQueue.length;
+    const t = ytQueue[ytQueueIdx];
+    playYouTube(t.videoId, t.title, t.artist, t.thumbnail);
+    return;
+  }
+  if (!ytCurrentVideoId) {
+    const next = shuffle
+      ? Math.floor(Math.random() * tracks.length)
+      : (currentTrackIdx + 1) % tracks.length;
+    playTrackAt(next);
+  }
+}
+
+function prevTrack() {
+  if (currentRadioId) return; // next/prev não faz sentido no modo rádio
+  if (ytCurrentVideoId) {
+    if (ytQueue.length > 1) {
+      ytQueueIdx = (ytQueueIdx - 1 + ytQueue.length) % ytQueue.length;
+      var t = ytQueue[ytQueueIdx];
+      playYouTube(t.videoId, t.title, t.artist, t.thumbnail);
+    } else {
+      try { if (ytPlayer && ytReady) ytPlayer.seekTo(0, true); } catch(e) {}
+    }
+    return;
+  }
+  if (currentTime > 3) { currentTime = 0; updateUI(); return; }
+  playTrackAt((currentTrackIdx - 1 + tracks.length) % tracks.length);
+}
+
+function toggleShuffle() {
+  shuffle = !shuffle;
+  document.getElementById('fpShuffle').classList.toggle('on', shuffle);
+}
+function toggleRepeat() {
+  repeat = !repeat;
+  document.getElementById('fpRepeat').classList.toggle('on', repeat);
+}
+
+// ── RADIO SHEET ──
+(function() {
+  const sheet    = document.getElementById('radioSheet');
+  const backdrop = document.getElementById('rsBackdrop');
+  const list     = document.getElementById('radioSheetList');
+
+  function buildList() {
+    list.innerHTML = '';
+    allRadios.forEach(r => {
+      const row = document.createElement('div');
+      row.className = 'rs-item' + (r.id === currentRadioId ? ' active' : '');
+      row.dataset.id = r.id;
+      row.innerHTML = `
+        <div class="rs-mark" style="background:${r.color}">${r.logo ? `<img src="${encodeURI(r.logo)}" alt="${r.name}" style="width:100%;height:100%;object-fit:contain;padding:3px;box-sizing:border-box" onerror="this.style.display='none';this.parentElement.appendChild(document.createTextNode('${r.abbr}'))">` : r.abbr}</div>
+        <div class="rs-info">
+          <div class="rs-name">${r.name}</div>
+          <div class="rs-sub">${r.genre} · ${r.freq}</div>
+        </div>
+        <span class="rs-badge">AO VIVO</span>`;
+      row.addEventListener('click', () => {
+        const fakeEl = document.querySelector(`.radio-card[data-id="${r.id}"]`) || row;
+        playRadio(r, fakeEl);
+        closeRadioSheet();
+      });
+      list.appendChild(row);
+    });
+  }
+
+  window.openRadioSheet = function() {
+    buildList();
+    sheet.classList.add('open');
+    backdrop.classList.add('show');
+  };
+  window.closeRadioSheet = function() {
+    sheet.classList.remove('open');
+    backdrop.classList.remove('show');
+  };
+})();
+
+
+const HEART_EMPTY = `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
+const HEART_FULL  = `<svg width="22" height="22" viewBox="0 0 24 24" fill="var(--accent)" stroke="var(--accent)" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
+const MINI_HEART_EMPTY = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
+const MINI_HEART_FULL  = `<svg width="18" height="18" viewBox="0 0 24 24" fill="var(--accent)" stroke="var(--accent)" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
+
+function toggleLike() {
+  if (ytCurrentVideoId) {
+    const title  = document.getElementById('fpTitle').textContent;
+    const artist = document.getElementById('fpArtist').textContent;
+    const thumb  = (ytQueue[ytQueueIdx] || {}).thumbnail || '';
+    const arr = getLikedTracks();
+    const i   = arr.findIndex(t => t.videoId === ytCurrentVideoId);
+    if (i >= 0) arr.splice(i, 1); else arr.unshift({videoId:ytCurrentVideoId,title,artist,thumbnail:thumb,savedAt:Date.now()});
+    localStorage.setItem('mvf_liked', JSON.stringify(arr));
+    const on = i < 0;
+    document.getElementById('fpHeartBtn').innerHTML   = on ? HEART_FULL  : HEART_EMPTY;
+    document.getElementById('miniHeartBtn').innerHTML = on ? MINI_HEART_FULL : MINI_HEART_EMPTY;
+    document.getElementById('fpHeartBtn').classList.toggle('liked', on);
+    return;
+  }
+  liked = !liked;
+  document.getElementById('fpHeartBtn').innerHTML   = liked ? HEART_FULL  : HEART_EMPTY;
+  document.getElementById('miniHeartBtn').innerHTML = liked ? MINI_HEART_FULL : MINI_HEART_EMPTY;
+  document.getElementById('fpHeartBtn').classList.toggle('liked', liked);
+}
+
+// Progress bar click
+document.getElementById('fpProgTrack').addEventListener('click', function(e) {
+  const rect = this.getBoundingClientRect();
+  const pct  = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+  if (ytCurrentVideoId && ytPlayer && ytReady) {
+    try { if (ytDuration > 0) ytPlayer.seekTo(pct * ytDuration, true); } catch(e) {}
+    return;
+  }
+  if (currentRadioId) return;
+  currentTime = pct * tracks[currentTrackIdx].dur;
+  updateUI();
+});
+
+// Volume bar — click + touch/drag
+(function() {
+  const track = document.getElementById('fpVolTrack');
+  const fill  = document.getElementById('fpVolFill');
+  const audio = document.getElementById('radioAudio');
+  function applyVol(clientX) {
+    const rect = track.getBoundingClientRect();
+    const vol  = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+    fill.style.width = (vol * 100) + '%';
+    audio.volume = vol;
+    if (ytPlayer && ytReady) try { ytPlayer.setVolume(vol * 100); } catch(e) {}
+  }
+  track.addEventListener('click',      e => applyVol(e.clientX));
+  track.addEventListener('touchstart', e => { e.preventDefault(); applyVol(e.touches[0].clientX); }, {passive:false});
+  track.addEventListener('touchmove',  e => { e.preventDefault(); applyVol(e.touches[0].clientX); }, {passive:false});
+})();
+
+// ── FULL PLAYER ──
+const fullPlayer = document.getElementById('fullPlayer');
+const miniPlayer = document.getElementById('miniPlayer');
+
+function openFullPlayer() { fullPlayer.style.transform = ''; fullPlayer.classList.add('open'); }
+function closeFullPlayer() { fullPlayer.style.transform = ''; fullPlayer.classList.remove('open'); }
+
+miniPlayer.addEventListener('click', openFullPlayer);
+
+// ── Mini-player swipe-to-dismiss ──
+function dismissPlayer() {
+  if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+  clearReconnectHandlers();
+  var audio = document.getElementById('radioAudio');
+  if (!audio.paused) { audio.pause(); audio.removeAttribute('src'); }
+  stopYouTube();
+  currentRadioId = null;
+  isPlaying      = false;
+  setLiveMode(false);
+  document.getElementById('appShell').classList.add('noplayer');
+  closeFullPlayer();
+}
+
+(function() {
+  var mp = miniPlayer;
+  var startX = 0, startY = 0, dx = 0, swiping = false;
+  var THRESHOLD = 72;
+
+  mp.addEventListener('touchstart', function(e) {
+    startX  = e.touches[0].clientX;
+    startY  = e.touches[0].clientY;
+    dx      = 0;
+    swiping = false;
+    mp.style.transition = 'none';
+  }, {passive:true});
+
+  mp.addEventListener('touchmove', function(e) {
+    dx = e.touches[0].clientX - startX;
+    var dy = e.touches[0].clientY - startY;
+    if (!swiping && Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 22) swiping = true;
+    if (!swiping) return;
+    e.preventDefault();
+    mp.style.transform = 'translateX(' + dx + 'px)';
+    mp.style.opacity   = String(Math.max(0, 1 - Math.abs(dx) / 180));
+  }, {passive:false});
+
+  mp.addEventListener('touchend', function(e) {
+    if (swiping && Math.abs(dx) > THRESHOLD) {
+      var dir = dx > 0 ? 1 : -1;
+      mp.style.transition = 'transform .18s ease, opacity .18s ease';
+      mp.style.transform  = 'translateX(' + (dir * window.innerWidth) + 'px)';
+      mp.style.opacity    = '0';
+      setTimeout(function() {
+        dismissPlayer();
+        mp.style.transition = '';
+        mp.style.transform  = '';
+        mp.style.opacity    = '';
+      }, 200);
+    } else if (swiping) {
+      mp.style.transition = 'transform .2s ease, opacity .2s ease';
+      mp.style.transform  = '';
+      mp.style.opacity    = '';
+      setTimeout(function() { mp.style.transition = ''; }, 220);
+    } else {
+      var t = e.target;
+      while (t && t !== mp) { if (t.tagName === 'BUTTON') { swiping = false; return; } t = t.parentElement; }
+      openFullPlayer();
+    }
+    swiping = false;
+  });
+})();
+
+// Swipe down to close
+let fpStartY = 0;
+fullPlayer.addEventListener('touchstart', e => { fpStartY = e.touches[0].clientY; }, {passive:true});
+fullPlayer.addEventListener('touchmove', e => {
+  const dy = e.touches[0].clientY - fpStartY;
+  if (dy > 0) { e.preventDefault(); fullPlayer.style.transition='none'; fullPlayer.style.transform=`translateY(${dy}px)`; }
+}, {passive:false});
+fullPlayer.addEventListener('touchend', e => {
+  const dy = e.changedTouches[0].clientY - fpStartY;
+  fullPlayer.style.transition = '';
+  fullPlayer.style.transform = '';
+  if (dy > 90) closeFullPlayer();
+});
+
+// Hero save button — save trending tracks as playlist
+document.getElementById('heroSaveBtn').addEventListener('click', function() {
+  if (!trendingItems || !trendingItems.length) { showToast('Aguarde carregar as músicas…'); return; }
+  var pl = plCreatePlaylist('Novas Descobertas MVF');
+  trendingItems.forEach(function(it) {
+    plAddTrack(pl.id, {
+      videoId:   it.id,
+      title:     decodeHtml(it.snippet.title),
+      artist:    decodeHtml(it.snippet.channelTitle),
+      thumbnail: ((it.snippet.thumbnails.medium || it.snippet.thumbnails.default) || {}).url || ''
+    });
+  });
+  showToast('Playlist salva!');
+});
+
+// Hero play button — play YouTube trending if loaded, else first local track
+document.getElementById('heroPlayBtn').addEventListener('click', function() {
+  if (trendingItems && trendingItems.length) {
+    var items = trendingItems;
+    var first = items[0];
+    ytQueue    = buildYtQueue(items);
+    ytQueueIdx = 0;
+    playYouTube(first.id,
+      decodeHtml(first.snippet.title),
+      decodeHtml(first.snippet.channelTitle),
+      ((first.snippet.thumbnails.medium || first.snippet.thumbnails.default) || {}).url || '');
+    openFullPlayer();
+  } else {
+    // trending not loaded yet — scroll to the list and wait
+    document.getElementById('tracksList').scrollIntoView({behavior:'smooth'});
+  }
+});
+
+// Nav tab
+function setTab(el) {
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ── TAB SHEET (Buscar / Biblioteca / Perfil) ──
+(function() {
+  const sheet = document.getElementById('tabSheet');
+  const title = document.getElementById('tabSheetTitle');
+  const body  = document.getElementById('tabSheetBody');
+
+  const pages = {
+    buscar: {
+      label: 'Buscar',
+      render() {
+        const key = getYtApiKey();
+        body.innerHTML = `
+          <div class="search-input-wrap">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input id="searchQ" type="search" placeholder="Buscar músicas, artistas..." autofocus>
+          </div>
+          <div id="searchSuggestions" class="search-suggestions">
+            <p class="sugg-label">Sugestões</p>
+            <div class="sugg-chips">
+              ${['Forró','Sertanejo','Funk','Pop','MPB','Pagode','Rock Nacional','Axé','Reggaeton','Gospel'].map(s =>
+                `<button class="sugg-chip" data-term="${s}">${s}</button>`).join('')}
+            </div>
+            <div style="margin-top:18px">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+                <span style="font-size:13px;font-weight:700;color:var(--t1)">Mais Tocadas</span>
+                <span style="font-size:11px;color:var(--accent)">Em alta no Brasil</span>
+              </div>
+              <div id="searchTrendingList"></div>
+            </div>
+          </div>
+          <div class="search-results" id="searchRes"></div>`;
+        const q   = document.getElementById('searchQ');
+        const res = document.getElementById('searchRes');
+        let ytTimer = null;
+
+        // Popula "Mais Tocadas" com os trending já carregados
+        (function renderSearchTrending() {
+          const tDiv = document.getElementById('searchTrendingList');
+          if (!tDiv) return;
+          if (!trendingItems || !trendingItems.length) {
+            tDiv.innerHTML = '<div style="font-size:12px;color:var(--t3);padding:8px 0">Carregando…</div>';
+            return;
+          }
+          tDiv.innerHTML = '';
+          trendingItems.forEach(function(it, idx) {
+            const title   = decodeHtml(it.snippet.title);
+            const channel = decodeHtml(it.snippet.channelTitle);
+            const thumb   = ((it.snippet.thumbnails.default) || {}).url || '';
+            const row = document.createElement('div');
+            row.className = 'yt-result';
+            row.style.cssText = 'display:flex;align-items:center;gap:10px;padding:8px 0;cursor:pointer;border-bottom:1px solid var(--border)';
+            row.innerHTML = `
+              <span style="font-size:11px;color:var(--t3);min-width:16px;text-align:center">${idx+1}</span>
+              ${thumb ? `<img src="${thumb}" style="width:44px;height:44px;border-radius:6px;object-fit:cover;flex-shrink:0">` : ''}
+              <div style="flex:1;min-width:0">
+                <div style="font-size:12.5px;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${title}</div>
+                <div style="font-size:11px;color:var(--t3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${channel}</div>
+              </div>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="color:var(--t3);flex-shrink:0"><polygon points="5 3 19 12 5 21 5 3"/></svg>`;
+            row.onclick = function() {
+              var queue = buildYtQueue(trendingItems);
+              ytQueue = queue; ytQueueIdx = idx;
+              playYouTube(it.id, title, channel, ((it.snippet.thumbnails.medium || it.snippet.thumbnails.default) || {}).url || '');
+              closeTabSheet();
+            };
+            tDiv.appendChild(row);
+          });
+        })();
+
+        async function doSearch(v) {
+          res.innerHTML = '';
+          if (!v) return;
+          const lv = v.toLowerCase();
+          // Search radios
+          allRadios.filter(r => r.name.toLowerCase().includes(lv) || r.genre.toLowerCase().includes(lv)).forEach(r => {
+            const row = document.createElement('div');
+            row.className = 'rs-item';
+            row.innerHTML = `<div class="rs-mark" style="background:${r.color}">${r.logo ? `<img src="${encodeURI(r.logo)}" alt="${r.name}" style="width:100%;height:100%;object-fit:contain;padding:3px;box-sizing:border-box" onerror="this.style.display='none'">` : r.abbr}</div>
+              <div class="rs-info"><div class="rs-name">${r.name}</div><div class="rs-sub">${r.genre} · ${r.freq}</div></div>
+              <span class="rs-badge">AO VIVO</span>`;
+            row.onclick = () => { playRadio(r, row); closeTabSheet(); };
+            res.appendChild(row);
+          });
+          // YouTube search
+          if (!key) return;
+          const loadId = 'ytLoad_' + Date.now();
+          res.insertAdjacentHTML('beforeend', `<div id="${loadId}" style="padding:20px 0;text-align:center;color:var(--t3);font-size:13px">Buscando no YouTube…</div>`);
+          const result = await searchYouTube(v);
+          document.getElementById(loadId)?.remove();
+          if (result.error) {
+            res.insertAdjacentHTML('beforeend', `<div style="padding:12px 0;color:var(--t3);font-size:12px">Erro YouTube: ${result.error}</div>`);
+            return;
+          }
+          const items = result.items || [];
+          items.forEach((item, index) => {
+            const vid     = item.id.videoId;
+            const title   = decodeHtml(item.snippet.title);
+            const channel = decodeHtml(item.snippet.channelTitle);
+            const thumb   = (item.snippet.thumbnails.medium || item.snippet.thumbnails.default || {}).url || '';
+            const row = document.createElement('div');
+            row.className = 'yt-result';
+            row.innerHTML = `
+              <img class="yt-thumb" src="${thumb}" alt="" loading="lazy">
+              <div class="yt-info">
+                <div class="yt-title">${title}</div>
+                <div class="yt-channel">${channel}</div>
+              </div>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="color:var(--t3);flex-shrink:0"><polygon points="5 3 19 12 5 21 5 3"/></svg>`;
+            row.onclick = () => {
+              ytQueue = items.map(it => ({
+                videoId: it.id.videoId,
+                title: decodeHtml(it.snippet.title),
+                artist: decodeHtml(it.snippet.channelTitle),
+                thumbnail: (it.snippet.thumbnails.medium || it.snippet.thumbnails.default || {}).url || ''
+              }));
+              ytQueueIdx = index;
+              playYouTube(vid, title, channel, thumb);
+              closeTabSheet();
+              openFullPlayer();
+            };
+            res.appendChild(row);
+          });
+          if (!res.childElementCount) {
+            res.insertAdjacentHTML('beforeend', `<div style="padding:40px 0;text-align:center;color:var(--t3);font-size:13px">Nenhum resultado para "${v}"</div>`);
+          }
+        }
+        document.querySelectorAll('.sugg-chip').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            const term = btn.dataset.term;
+            q.value = term;
+            document.getElementById('searchSuggestions').style.display = 'none';
+            doSearch(term);
+          });
+        });
+
+        q.addEventListener('input', e => {
+          const val = e.target.value.trim();
+          const sugg = document.getElementById('searchSuggestions');
+          if (sugg) sugg.style.display = val ? 'none' : '';
+          clearTimeout(ytTimer);
+          ytTimer = setTimeout(() => doSearch(val), 600);
+        });
+      }
+    },
+    biblioteca: {
+      label: 'Biblioteca',
+      render() {
+        body.innerHTML = '';
+
+        // ── Playlists section ──
+        const plTitle = document.createElement('div');
+        plTitle.className = 'lib-section-title';
+        plTitle.textContent = 'Minhas Playlists';
+        body.appendChild(plTitle);
+
+        const newBtn = document.createElement('button');
+        newBtn.className = 'new-pl-btn';
+        newBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Nova Playlist`;
+        newBtn.onclick = () => {
+          const name = prompt('Nome da playlist:');
+          if (name && name.trim()) {
+            plCreatePlaylist(name.trim());
+            pages.biblioteca.render();
+          }
+        };
+        body.appendChild(newBtn);
+
+        const pls = getPlaylists();
+        pls.forEach(pl => {
+          const card = document.createElement('div');
+          card.className = 'pl-card';
+          card.innerHTML = `
+            <div class="pl-cover">🎵</div>
+            <div class="pl-info">
+              <div class="pl-name">${pl.name}</div>
+              <div class="pl-meta">${pl.tracks.length} música${pl.tracks.length !== 1 ? 's' : ''}</div>
+            </div>
+            <button class="pl-del" title="Excluir" onclick="event.stopPropagation();plDeletePlaylist('${pl.id}');pages.biblioteca.render()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+            </button>`;
+          card.onclick = () => openPlaylistView(pl);
+          body.appendChild(card);
+        });
+
+        if (!pls.length) {
+          const empty = document.createElement('div');
+          empty.style.cssText = 'font-size:13px;color:var(--t3);padding:8px 4px 16px';
+          empty.textContent = 'Nenhuma playlist ainda.';
+          body.appendChild(empty);
+        }
+
+        // ── Curtidas section ──
+        const likedTitle = document.createElement('div');
+        likedTitle.className = 'lib-section-title';
+        likedTitle.textContent = 'Curtidas';
+        body.appendChild(likedTitle);
+
+        const liked = getLikedTracks();
+        if (!liked.length) {
+          const empty2 = document.createElement('div');
+          empty2.style.cssText = 'font-size:13px;color:var(--t3);padding:4px';
+          empty2.textContent = 'Curta músicas do YouTube para salvá-las aqui.';
+          body.appendChild(empty2);
+        } else {
+          liked.forEach((t, i) => {
+            const row = document.createElement('div');
+            row.className = 'yt-result';
+            row.innerHTML = `
+              <img class="yt-thumb" src="${t.thumbnail || ''}" alt="" onerror="this.style.background='var(--sf1)'">
+              <div class="yt-info">
+                <div class="yt-title">${t.title}</div>
+                <div class="yt-channel">${t.artist}</div>
+              </div>
+              <button class="lib-del" title="Remover" onclick="event.stopPropagation();removeLiked('${t.videoId}')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+              </button>`;
+            row.onclick = () => {
+              ytQueue = liked;
+              ytQueueIdx = i;
+              playYouTube(t.videoId, t.title, t.artist, t.thumbnail);
+              closeTabSheet();
+              openFullPlayer();
+            };
+            body.appendChild(row);
+          });
+        }
+      }
+    },
+    perfil: {
+      label: 'Perfil',
+      render() {
+        const savedKey = getYtApiKey();
+        body.innerHTML = `
+          <div class="ph-center" style="padding-top:20px;padding-bottom:4px;gap:8px">
+            <div id="phIconTap" style="font-size:52px;opacity:.85;cursor:pointer;user-select:none">🎧</div>
+            <div class="ph-title">MVF Music</div>
+            <div class="ph-sub" style="max-width:none;display:flex;flex-direction:column;align-items:center;gap:5px">
+              <span style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--t3);letter-spacing:.04em">
+                Versão 1.0 · Feito por
+                <a href="https://www.instagram.com/lazugedesigner/" target="_blank" rel="noopener" style="display:flex;align-items:center;opacity:.75;transition:opacity .2s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=.75">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 151.28 31.4" height="11" style="display:block">
+                    <polygon fill="#fff" points="1.01 1.13 7.44 1.13 7.44 24.83 28.8 24.83 27.33 30.28 1.01 30.28 1.01 1.13"/>
+                    <path fill="#fff" d="M29.34,22.8h8.12l2.19,7.48h6.9S37.46,1.13,37.46,1.13h-8.12l-6.44,21.67h6.44ZM30.27,17.86l2.98-11.8h.09l3.19,11.8h-6.26Z"/>
+                    <polygon fill="#fff" points="48.77 26.72 48.77 30.28 70.81 30.28 70.81 24.83 57.39 24.83 57.39 24.65 70.59 4.91 70.59 1.13 46.54 1.13 48.77 6.58 62.27 6.58 62.27 6.75 48.77 26.72"/>
+                    <polygon fill="#fff" points="74.8 1.13 74.8 30.28 97.97 30.28 97.97 1.13 91.57 4.91 91.57 24.83 81.23 25.09 81.23 4.91 74.8 1.13"/>
+                    <polygon fill="#fff" points="102.21 1.13 102.21 30.28 127.19 30.28 127.19 13.58 116.63 13.58 116.63 18.73 121.01 18.73 121.01 24.83 108.95 24.83 108.95 6.58 150.27 6.58 150.27 1.13 102.21 1.13"/>
+                    <rect fill="#fff" x="132.19" y="12.59" width="18.08" height="5.27"/>
+                    <rect fill="#fff" x="132.19" y="24.83" width="18.08" height="5.45"/>
+                  </svg>
+                </a>
+              </span>
+              <span style="font-size:10px;color:var(--t3);letter-spacing:.03em">© Todos os direitos reservados · MVF Music</span>
+            </div>
+          </div>
+
+          <div class="terms-block" onclick="this.classList.toggle('open')">
+            <div class="terms-head"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg> Termos de Uso <span class="terms-arrow">▼</span></div>
+            <div class="terms-body">
+              <p><strong>1. Uso pessoal</strong><br>O MVF Music é destinado exclusivamente ao uso pessoal e não comercial.</p>
+              <p><strong>2. Conteúdo</strong><br>Utilizamos a API oficial do YouTube para exibir vídeos disponíveis publicamente. Todo conteúdo pertence aos seus respectivos criadores e detentores de direitos autorais.</p>
+              <p><strong>3. Rádios</strong><br>Os streams de rádio são fornecidos pelas próprias emissoras. Não nos responsabilizamos pela disponibilidade ou qualidade das transmissões.</p>
+              <p><strong>4. Dados locais</strong><br>Playlists e favoritos ficam armazenados apenas neste dispositivo. Nenhum dado é coletado ou enviado a servidores externos.</p>
+              <p><strong>5. Isenção de responsabilidade</strong><br>O aplicativo é fornecido "como está", sem garantias de disponibilidade contínua ou ausência de erros.</p>
+            </div>
+          </div>
+
+          <div class="terms-block" onclick="this.classList.toggle('open')">
+            <div class="terms-head"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg> Sobre o App <span class="terms-arrow">▼</span></div>
+            <div class="terms-body">
+              <p>MVF Music é um player de música pessoal com rádio ao vivo, descoberta musical via YouTube e gestão de playlists.</p>
+              <p style="color:var(--t3);font-size:11.5px">© 2025 MVF Music · Todos os direitos reservados</p>
+            </div>
+          </div>
+
+          <div style="display:flex;justify-content:center;padding:28px 0 8px">
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 296.62 300" height="80" style="opacity:.18">
+              <defs>
+                <linearGradient id="mvfg1" x1="73.91" y1="268.64" x2="76.37" y2="268.64" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#89caef"/><stop offset="1" stop-color="#187cf5"/></linearGradient>
+                <linearGradient id="mvfg2" x1="79.07" y1="268.63" x2="92.93" y2="268.63" xlink:href="#mvfg1"/>
+                <linearGradient id="mvfg3" x1="210.35" y1="268.64" x2="212.91" y2="268.64" gradientTransform="translate(479.99 56.66) rotate(89.92)" xlink:href="#mvfg1"/>
+                <linearGradient id="mvfg4" x1="194.09" y1="268.66" x2="207.93" y2="268.66" xlink:href="#mvfg1"/>
+                <linearGradient id="mvfg5" x1="118.45" y1="269.2" x2="173.08" y2="269.2" xlink:href="#mvfg1"/>
+                <linearGradient id="mvfg6" x1="2.82" y1="219.2" x2="286.92" y2="219.2" xlink:href="#mvfg1"/>
+                <linearGradient id="mvfg7" x1="22.88" y1="268.67" x2="39.51" y2="268.67" xlink:href="#mvfg1"/>
+                <linearGradient id="mvfg8" x1="253.87" y1="269.74" x2="266.63" y2="269.74" xlink:href="#mvfg1"/>
+                <linearGradient id="mvfg9" x1="245.49" y1="267.67" x2="258.14" y2="267.67" xlink:href="#mvfg1"/>
+              </defs>
+              <path fill="#0d3f6e" d="M11.49,66.01c0-10.34-.32-19.41-.64-26.57h24.03l1.11,9.71h.64c2.86-3.82,9.71-11.46,23.07-11.46,10.02,0,17.82,4.61,21.16,12.41h.32c3.18-3.98,6.68-7.16,10.82-9.23,3.98-2.07,8.59-3.18,13.84-3.18,16.87,0,26.57,12.25,26.57,33.89v46.15h-27.85v-41.85c0-9.71-2.86-15.28-9.23-15.28-4.61,0-7.48,3.02-8.75,6.68-.64,1.59-.8,4.14-.8,5.73v44.71h-27.85v-42.64c0-8.75-2.71-14.48-9.07-14.48-5.25,0-7.64,3.82-8.75,6.52-.8,1.75-.8,3.82-.8,5.73v44.87H11.49v-51.71Z"/>
+              <path fill="#0d3f6e" d="M171.72,39.44l8.43,33.26c1.59,6.21,2.7,12.25,3.66,18.46h.48c.95-6.36,1.91-11.93,3.5-18.46l7.8-33.26h30.07l-28.48,78.29h-28.8l-27.85-78.29h31.19Z"/>
+              <path fill="#0d3f6e" d="M245.39,117.73v-57.28h-10.02v-21h10.02v-2.71c0-8.59,3.02-19.25,10.18-25.62,6.52-6.05,15.43-8.12,22.75-8.12,5.41,0,9.55.48,13.21,1.43l-.64,21.96c-2.07-.64-4.46-.96-7.32-.96-6.21,0-9.71,4.46-9.71,10.18v3.82h14.32v21h-14v57.28h-28.8Z"/>
+              <path fill="#187cf5" d="M93.41,196.31h-5.37v-31.13c0-7.09-1.09-12.31-3.27-15.67-2.18-3.36-5.53-5.05-10.04-5.05-2.29,0-4.47.43-6.55,1.29-2.08.86-3.97,2.06-5.69,3.6-1.72,1.54-3.2,3.36-4.45,5.47-1.25,2.11-2.24,4.46-2.95,7.03v34.46h-5.37v-31.13c0-7.16-1.07-12.4-3.22-15.73-2.15-3.33-5.47-4.99-9.98-4.99-2.29,0-4.46.41-6.49,1.23-2.04.82-3.92,2-5.64,3.54-1.72,1.54-3.24,3.37-4.56,5.48-1.33,2.11-2.34,4.45-3.06,7.03v34.57h-5.37v-55.82h5.05v13.31c2.29-4.51,5.3-8.01,9.02-10.52,3.72-2.5,7.84-3.76,12.35-3.76s8.55,1.39,11.49,4.19c2.93,2.79,4.69,6.44,5.26,10.95,5.3-10.09,12.6-15.14,21.9-15.14,6.08,0,10.43,2.16,13.04,6.49,2.61,4.33,3.92,10.4,3.92,18.2v32.1Z"/>
+              <path fill="#187cf5" d="M126.9,197.38c-11.88,0-17.82-8.23-17.82-24.69v-32.21h5.37v31.45c0,13.74,4.69,20.61,14.06,20.61,2.36,0,4.65-.41,6.87-1.23,2.22-.82,4.29-1.97,6.23-3.44,1.93-1.47,3.63-3.24,5.1-5.31,1.47-2.08,2.63-4.36,3.49-6.87v-35.21h5.37v48.31c0,1.79.75,2.68,2.25,2.68v4.83c-.36.07-.68.11-.97.11h-.64c-1.43,0-2.7-.45-3.81-1.34-1.11-.89-1.66-2.09-1.66-3.6v-8.37c-2.43,4.51-5.78,8.02-10.04,10.52-4.26,2.51-8.86,3.76-13.79,3.76Z"/>
+              <path fill="#187cf5" d="M190.35,197.38c-4.29,0-8.41-.72-12.35-2.15-3.94-1.43-7.37-3.58-10.31-6.44l2.68-3.65c3.01,2.72,6.12,4.72,9.34,6.01,3.22,1.29,6.76,1.93,10.63,1.93,4.87,0,8.78-1.02,11.75-3.06,2.97-2.04,4.46-4.89,4.46-8.53,0-1.72-.38-3.17-1.13-4.35-.75-1.18-1.88-2.18-3.38-3.01-1.5-.82-3.37-1.56-5.58-2.2-2.22-.64-4.8-1.32-7.73-2.04-3.15-.71-5.89-1.43-8.21-2.15-2.33-.72-4.24-1.57-5.74-2.58-1.5-1-2.63-2.22-3.38-3.65-.75-1.43-1.13-3.26-1.13-5.48,0-2.79.54-5.22,1.61-7.3,1.07-2.08,2.56-3.79,4.45-5.15,1.9-1.36,4.08-2.38,6.55-3.06s5.1-1.02,7.89-1.02c4.36,0,8.23.73,11.59,2.2,3.36,1.47,5.98,3.35,7.84,5.64l-3.01,2.9c-1.86-2.15-4.28-3.76-7.25-4.83-2.97-1.07-6.14-1.61-9.5-1.61-2.08,0-4.03.21-5.85.64-1.83.43-3.42,1.11-4.78,2.04-1.36.93-2.43,2.13-3.22,3.6-.79,1.47-1.18,3.2-1.18,5.21,0,1.65.27,2.97.81,3.97.54,1,1.4,1.86,2.58,2.58,1.18.72,2.7,1.34,4.56,1.88,1.86.54,4.08,1.13,6.66,1.77,3.51.86,6.62,1.68,9.34,2.47,2.72.79,4.99,1.75,6.82,2.9s3.22,2.51,4.19,4.08c.97,1.58,1.45,3.58,1.45,6.01,0,5.01-1.95,9-5.85,11.97-3.9,2.97-9.11,4.45-15.62,4.45Z"/>
+              <path fill="#187cf5" d="M224.27,127.82v-9.88h5.37v9.88h-5.37ZM224.27,196.31v-55.82h5.37v55.82h-5.37Z"/>
+              <path fill="#187cf5" d="M242.62,168.18c0-3.94.68-7.66,2.04-11.16,1.36-3.51,3.26-6.55,5.69-9.13,2.43-2.58,5.33-4.62,8.7-6.12,3.36-1.5,7.05-2.25,11.06-2.25,5.08,0,9.55,1.14,13.42,3.43,3.86,2.29,6.76,5.48,8.69,9.55l-5.26,1.72c-1.65-3.08-3.99-5.49-7.03-7.25-3.04-1.75-6.39-2.63-10.04-2.63-3.08,0-5.94.61-8.59,1.83-2.65,1.22-4.96,2.9-6.93,5.05s-3.53,4.67-4.67,7.57c-1.15,2.9-1.72,6.03-1.72,9.39s.59,6.53,1.77,9.5c1.18,2.97,2.75,5.55,4.72,7.73,1.97,2.18,4.29,3.92,6.98,5.21,2.68,1.29,5.53,1.93,8.53,1.93,1.93,0,3.85-.29,5.74-.86,1.9-.57,3.65-1.32,5.26-2.25,1.61-.93,3.01-2.02,4.19-3.27,1.18-1.25,1.99-2.56,2.41-3.92l5.26,1.5c-.72,1.93-1.81,3.74-3.27,5.42-1.47,1.68-3.2,3.13-5.21,4.35-2,1.22-4.22,2.16-6.66,2.84-2.43.68-4.94,1.02-7.52,1.02-3.94,0-7.59-.77-10.95-2.31-3.37-1.54-6.28-3.65-8.75-6.33-2.47-2.68-4.4-5.78-5.8-9.29-1.4-3.51-2.09-7.26-2.09-11.27Z"/>
+              <rect fill="url(#mvfg1)" x="73.91" y="258.08" width="2.46" height="21.11"/>
+              <polygon fill="url(#mvfg2)" points="92.93 279.4 79.07 268.66 92.89 257.85 92.93 279.4"/>
+              <rect fill="url(#mvfg3)" x="201.07" y="267.38" width="21.12" height="2.54" transform="translate(-57.29 479.92) rotate(-89.92)"/>
+              <polygon fill="url(#mvfg4)" points="207.93 268.63 194.09 279.45 194.09 257.88 207.93 268.63"/>
+              <path fill="url(#mvfg5)" d="M145.76,241.91c-15.09,0-27.32,12.22-27.32,27.3s12.23,27.29,27.32,27.29,27.32-12.22,27.32-27.29-12.23-27.3-27.32-27.3ZM139.73,283.68l-.07-29.85,19.12,14.96-19.05,14.9Z"/>
+              <path fill="url(#mvfg6)" d="M286.83,217.99l-201.38-.11c-.6-2.54-2.7-4.38-4.96-4.72-2.7-.4-5,.73-6.43,3.03l-69.04.02c-1.58,0-2.33,1.59-2.18,2.77.18,1.35,1.21,2.2,2.77,2.2l67.98-.02c1.06,2.79,3.6,4.39,6.44,4.13,2.66-.24,4.86-2.19,5.5-5.18l26.35.29h61.94s112.88.08,112.88.08c.33-.78.2-1.56.13-2.5Z"/>
+              <path fill="url(#mvfg7)" d="M35.55,275.34c-.23.14-.81-.72-.68-.96.15-.27.58-.52,1-1.04-2.27-.25-4.16-.97-5.6-3.17-1.53,2.35-4.34,3.42-7.09,2.81-.36-.1-.2-1.34.27-1.32,1.99.57,5.88-.63,5.8-3.13s-4.04-3.21-5.9-3.23c-.54-.1-.54-.9-.37-1.27,2.71-.18,5.55.65,7.35,3.01,1.45-1.85,3.39-3.02,5.84-3.03-.43-.55-.77-.78-.94-1.06-.16-.27.57-1.14.82-.94l3.45,2.83-3.71,3.08c-.35.07-1.06-.76-.78-1.1.32-.38,1.3-.67,1.28-1.29-1.74-.41-4.94,1.21-4.89,3.19.06,2.27,3.13,3.38,4.97,3.05l-1.34-1.54c-.2-.22.65-1.02.95-.78l3.44,2.79-3.88,3.09Z"/>
+              <path fill="url(#mvfg8)" d="M253.87,275.2l2.98-2.66c.21-.19.62-.43.85-.4.26.03.67.44.71.73.04.25-.44.59-.86.97,3.03.91,6.25-.85,6.96-3.98.71-3.13-1.65-6.22-5.05-6.45-.25-.7-.23-1.35-.02-1.98,4.51.09,7.64,3.99,7.14,8.17-.53,4.44-4.71,7.23-9.27,6.31.11.64.7.76.85.98.25.38-.18.93-.68,1.16l-3.61-2.85Z"/>
+              <path fill="url(#mvfg9)" d="M252.68,274.04c.26.61.19,1.24.09,2-4.33-.02-7.58-3.69-7.26-7.82.34-4.34,4.08-7.29,8.55-6.76.17.02.49-.04.7-.08.68-.12-.87-.72-.95-1.11-.07-.32.28-.73.51-.88.39-.26.67.08.99.37l2.83,2.48-3.25,2.68c-.29.24-.58.39-.85.19-.16-.12-.46-.37-.48-.67s.34-.56.8-.87c-3.02-.69-6.13,1.02-6.75,4.06-.62,3.06,1.53,6.27,5.07,6.4Z"/>
+            </svg>
+          </div>
+
+          <div class="dev-area" id="devArea">
+            <div class="api-key-wrap" style="margin-top:0">
+              <div class="api-key-label">🔑 YouTube Data API v3</div>
+              <div class="api-key-hint">
+                Obtenha grátis em <b>console.cloud.google.com</b> → "YouTube Data API v3" → Credenciais → Criar chave de API.<br>
+                Cota gratuita: 100 buscas por dia.
+              </div>
+              <input class="api-key-input" id="ytApiKeyInput" type="password"
+                placeholder="AIzaSy..." value="${savedKey}">
+              <button class="api-key-save" onclick="saveYtKey()">Salvar chave</button>
+              ${savedKey ? '<div class="api-key-ok">✓ Chave configurada</div>' : ''}
+              <div id="apiSaveMsg"></div>
+            </div>
+          </div>`;
+
+        // Secret: 5 taps on the 🎧 icon reveals the dev/API section
+        var taps = 0, tapTimer = null;
+        document.getElementById('phIconTap').addEventListener('click', function() {
+          taps++;
+          clearTimeout(tapTimer);
+          tapTimer = setTimeout(function() { taps = 0; }, 1800);
+          if (taps >= 5) {
+            taps = 0;
+            document.getElementById('devArea').classList.toggle('open');
+          }
+        });
+      }
+    }
+  };
+
+  window.pages = pages;
+
+  function openPlaylistView(pl) {
+    title.textContent = pl.name;
+    body.innerHTML = '';
+    const backBtn = document.createElement('button');
+    backBtn.style.cssText = 'display:flex;align-items:center;gap:6px;color:var(--accent);font-size:13px;font-weight:600;margin-bottom:14px;padding:0';
+    backBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg> Biblioteca`;
+    backBtn.onclick = () => pages.biblioteca.render();
+    body.insertBefore(backBtn, body.firstChild);
+    body.appendChild(backBtn);
+
+    if (!pl.tracks.length) {
+      const empty = document.createElement('div');
+      empty.style.cssText = 'font-size:13px;color:var(--t3);padding:8px 0';
+      empty.textContent = 'Playlist vazia. Toque uma música e clique em + para adicionar.';
+      body.appendChild(empty);
+      return;
+    }
+    pl.tracks.forEach((t, i) => {
+      const row = document.createElement('div');
+      row.className = 'yt-result';
+      row.innerHTML = `
+        <img class="yt-thumb" src="${t.thumbnail || ''}" alt="" onerror="this.style.background='var(--sf1)'">
+        <div class="yt-info">
+          <div class="yt-title">${t.title}</div>
+          <div class="yt-channel">${t.artist}</div>
+        </div>
+        <button class="lib-del" title="Remover" onclick="event.stopPropagation();plRemoveTrack('${pl.id}','${t.videoId}');openPlaylistView(getPlaylists().find(function(p){return p.id==='${pl.id}';})||pl)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        </button>`;
+      row.onclick = () => {
+        ytQueue = pl.tracks;
+        ytQueueIdx = i;
+        playYouTube(t.videoId, t.title, t.artist, t.thumbnail);
+        closeTabSheet();
+        openFullPlayer();
+      };
+      body.appendChild(row);
+    });
+  }
+  window.openPlaylistView = openPlaylistView;
+
+  window.openTabSheet = function(tab) {
+    const page = pages[tab];
+    if (!page) return;
+    title.textContent = page.label;
+    page.render();
+    sheet.classList.add('open');
+  };
+  window.closeTabSheet = function() {
+    sheet.classList.remove('open');
+    // reset nav to Início
+    document.querySelectorAll('.nav-tab').forEach((t,i) => t.classList.toggle('active', i===0));
+  };
+})();
+
+// Init
+document.getElementById('fpDur').textContent = fmt(tracks[0].dur);
+updateUI();
+
+// ── YOUTUBE INTEGRATION ──
+var ytPlayer         = null;
+var ytReady          = false;
+var ytApiLoaded      = false;
+var ytApiCallbacks   = [];
+var ytCurrentVideoId = null;
+var ytQueue          = [];
+var ytQueueIdx       = 0;
+var ytSkipCount      = 0;
+var ytDuration       = 0;
+var ytProgressInt    = null;
+var ytChkInterval    = null;
+
+function decodeHtml(str) {
+  var t = document.createElement('textarea');
+  t.innerHTML = str;
+  return t.value;
+}
+
+function getLikedTracks() {
+  try { return JSON.parse(localStorage.getItem('mvf_liked') || '[]'); } catch(e) { return []; }
+}
+function getYtApiKey() {
+  return localStorage.getItem('mvf_yt_key') || 'AIzaSyATZDn8_ZoaRplK38TaVjIOJXmeYVt3TOc';
+}
+
+window.saveYtKey = function() {
+  const v = (document.getElementById('ytApiKeyInput') || {}).value || '';
+  const k = v.trim();
+  if (k) {
+    localStorage.setItem('mvf_yt_key', k);
+    const msg = document.getElementById('apiSaveMsg');
+    if (msg) { msg.style.cssText = 'font-size:11px;color:#22c55e;margin-top:4px'; msg.textContent = '✓ Chave salva com sucesso!'; }
+  }
+};
+
+window.removeLiked = function(videoId) {
+  const arr = getLikedTracks().filter(t => t.videoId !== videoId);
+  localStorage.setItem('mvf_liked', JSON.stringify(arr));
+  // Re-render biblioteca if open
+  if (document.getElementById('tabSheet').classList.contains('open')) {
+    openTabSheet('biblioteca');
+  }
+};
+
+// Carrega a IFrame API do YouTube
+window.onYouTubeIframeAPIReady = function() {
+  ytApiLoaded = true;
+  ytApiCallbacks.forEach(function(cb) { cb(); });
+  ytApiCallbacks = [];
+};
+
+(function(){
+  var s = document.createElement('script');
+  s.src = 'https://www.youtube.com/iframe_api';
+  document.head.appendChild(s);
+})();
+
+function ytCreatePlayer(videoId) {
+  ytPlayer = new YT.Player('ytPlayerDiv', {
+    height: '100%', width: '100%',
+    videoId: videoId,
+    playerVars: {
+      autoplay: 1, controls: 1, modestbranding: 1, rel: 0,
+      playsinline: 1, enablejsapi: 1,
+      origin: window.location.origin || 'http://localhost:3000'
+    },
+    events: {
+      onReady: function(e) {
+        ytReady = true;
+        var vol = parseFloat((document.getElementById('fpVolFill')||{}).style.width) || 70;
+        try { e.target.setVolume(vol); } catch(ex) {}
+      },
+      onStateChange: function(e) {
+        if (e.data === YT.PlayerState.PLAYING) {
+          ytSkipCount = 0; setPlaying(true); startYtProgress();
+        } else if (e.data === YT.PlayerState.PAUSED) {
+          setPlaying(false); stopYtProgress();
+        } else if (e.data === YT.PlayerState.ENDED) {
+          stopYtProgress(); nextTrack();
+        }
+      },
+      onError: function() {
+        stopYtProgress();
+        ytSkipCount++;
+        if (ytQueue.length > 1 && ytSkipCount < ytQueue.length) {
+          document.getElementById('fpArtist').textContent   = 'Pulando vídeo bloqueado…';
+          document.getElementById('miniArtist').textContent = 'Pulando vídeo bloqueado…';
+          setTimeout(nextTrack, 300);
+        } else {
+          ytSkipCount = 0; setPlaying(false);
+          document.getElementById('fpArtist').textContent   = 'Sem resultado disponível';
+          document.getElementById('miniArtist').textContent = 'Sem resultado disponível';
+        }
+      }
+    }
+  });
+}
+
+
+function startYtProgress() {
+  stopYtProgress();
+  ytProgressInt = setInterval(function() {
+    if (!ytPlayer || !ytReady || !ytCurrentVideoId) return;
+    try {
+      var cur = ytPlayer.getCurrentTime() || 0;
+      var dur = ytPlayer.getDuration()    || 0;
+      if (dur > 0) {
+        ytDuration = dur;
+        var pct = Math.min(100, (cur/dur)*100).toFixed(1)+'%';
+        document.getElementById('miniProgFill').style.width = pct;
+        document.getElementById('fpProgFill').style.width   = pct;
+        document.getElementById('fpCur').textContent = fmt(cur);
+        document.getElementById('fpDur').textContent = fmt(dur);
+      }
+    } catch(e) {}
+  }, 500);
+}
+function stopYtProgress() {
+  if (ytProgressInt) { clearInterval(ytProgressInt); ytProgressInt = null; }
+}
+
+function playYouTube(videoId, title, artist, thumbnail) {
+  if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+  // Clear any stale readiness polling
+  if (ytChkInterval) { clearInterval(ytChkInterval); ytChkInterval = null; }
+  // Stop radio completely
+  var audio = document.getElementById('radioAudio');
+  if (!audio.paused) { audio.pause(); audio.removeAttribute('src'); }
+  currentRadioId = null;
+  ytCurrentVideoId = videoId;
+  ytDuration = 0;
+  stopYtProgress();
+
+  document.getElementById('fullPlayer').classList.add('yt-mode');
+  setLiveMode(false);
+  document.getElementById('miniTitleText').textContent = title;
+  document.getElementById('miniArtist').textContent    = artist;
+  document.getElementById('fpTitle').textContent       = title;
+  document.getElementById('fpArtist').textContent      = artist;
+  document.getElementById('fpDur').textContent         = '--:--';
+  document.getElementById('fpCur').textContent         = '0:00';
+  document.getElementById('miniProgFill').style.width  = '0%';
+  document.getElementById('fpProgFill').style.width    = '0%';
+
+  // Show mini-player immediately (don't wait for YT onStateChange)
+  showMiniPlayer();
+  setPlaying(true);
+  if (window._bgAudioStart) _bgAudioStart();
+
+  if ('mediaSession' in navigator) {
+    var msArt = thumbnail
+      ? [{ src: thumbnail, sizes: '480x360', type: 'image/jpeg' }]
+      : [{ src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' }];
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: title, artist: artist, album: 'MVF Music', artwork: msArt
+    });
+    _msArtwork = (thumbnail || '/icons/icon-512.png');
+  }
+
+  if (thumbnail) {
+    var img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = function() {
+      var c = document.getElementById('miniCanvas');
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+    };
+    img.src = thumbnail;
+  }
+
+  document.querySelectorAll('.track-row').forEach(function(r) { r.classList.remove('playing'); });
+  document.querySelectorAll('.radio-card').forEach(function(c) { c.classList.remove('active'); });
+
+  var isLiked = getLikedTracks().some(function(t) { return t.videoId === videoId; });
+  document.getElementById('fpHeartBtn').innerHTML   = isLiked ? HEART_FULL  : HEART_EMPTY;
+  document.getElementById('miniHeartBtn').innerHTML = isLiked ? MINI_HEART_FULL : MINI_HEART_EMPTY;
+  document.getElementById('fpHeartBtn').classList.toggle('liked', isLiked);
+
+  if (ytPlayer && ytReady) {
+    try { ytPlayer.loadVideoById(videoId); } catch(e) {}
+  } else if (ytPlayer && !ytReady) {
+    ytChkInterval = setInterval(function() {
+      if (!ytPlayer) { clearInterval(ytChkInterval); ytChkInterval = null; return; }
+      if (ytReady && ytCurrentVideoId === videoId) {
+        clearInterval(ytChkInterval); ytChkInterval = null;
+        try { ytPlayer.loadVideoById(videoId); } catch(e) {}
+      }
+    }, 200);
+  } else if (ytApiLoaded || (typeof YT !== 'undefined' && typeof YT.Player === 'function')) {
+    ytApiLoaded = true;
+    ytCreatePlayer(videoId);
+  } else {
+    ytApiCallbacks.push(function() {
+      if (ytCurrentVideoId === videoId) ytCreatePlayer(videoId);
+    });
+  }
+}
+
+async function searchYouTube(query) {
+  var key = getYtApiKey();
+  if (!key) return { error: 'nokey' };
+  var url = 'https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&videoEmbeddable=true&maxResults=25&q=' + encodeURIComponent(query + ' audio oficial') + '&key=' + encodeURIComponent(key);
+  try {
+    var res  = await fetch(url);
+    var data = await res.json();
+    if (data.error) return { error: data.error.message };
+    return { items: data.items || [] };
+  } catch(e) {
+    return { error: e.message };
+  }
+}
+
+// ── PLAYLISTS ──
+function getPlaylists() { try { return JSON.parse(localStorage.getItem('mvf_playlists') || '[]'); } catch(e) { return []; } }
+function savePlaylists(arr) { localStorage.setItem('mvf_playlists', JSON.stringify(arr)); }
+
+function plCreatePlaylist(name) {
+  var arr = getPlaylists();
+  var pl = { id: 'pl_' + Date.now(), name: name.trim(), tracks: [] };
+  arr.push(pl);
+  savePlaylists(arr);
+  return pl;
+}
+
+function plAddTrack(playlistId, track) {
+  var arr = getPlaylists();
+  var pl = arr.find(function(p) { return p.id === playlistId; });
+  if (pl && !pl.tracks.some(function(t) { return t.videoId === track.videoId; })) {
+    pl.tracks.push(track);
+    savePlaylists(arr);
+    return true;
+  }
+  return false;
+}
+
+function plDeletePlaylist(id) {
+  savePlaylists(getPlaylists().filter(function(p) { return p.id !== id; }));
+}
+
+function plRemoveTrack(playlistId, videoId) {
+  var arr = getPlaylists();
+  var pl = arr.find(function(p) { return p.id === playlistId; });
+  if (pl) { pl.tracks = pl.tracks.filter(function(t) { return t.videoId !== videoId; }); savePlaylists(arr); }
+}
+
+function currentYtTrack() {
+  if (!ytCurrentVideoId) return null;
+  return {
+    videoId:   ytCurrentVideoId,
+    title:     document.getElementById('fpTitle').textContent,
+    artist:    document.getElementById('fpArtist').textContent,
+    thumbnail: document.getElementById('miniCanvas').toDataURL()
+  };
+}
+
+function openPlModal() {
+  var track = currentYtTrack();
+  if (!track) return;
+  var list = document.getElementById('plModalList');
+  list.innerHTML = '';
+  var pls = getPlaylists();
+  if (!pls.length) {
+    list.innerHTML = '<div style="color:var(--t3);font-size:13px;padding:4px 0 8px">Nenhuma playlist ainda. Crie uma abaixo!</div>';
+  } else {
+    pls.forEach(function(pl) {
+      var div = document.createElement('div');
+      div.className = 'pl-list-item';
+      div.innerHTML = '<div class="pl-list-cover">🎵</div><div><div class="pl-list-name">' + pl.name + '</div><div class="pl-list-count">' + pl.tracks.length + ' música' + (pl.tracks.length !== 1 ? 's' : '') + '</div></div>';
+      div.onclick = function() {
+        var added = plAddTrack(pl.id, track);
+        closePlModal();
+        showToast(added ? 'Adicionado a "' + pl.name + '"' : 'Já está nessa playlist');
+      };
+      list.appendChild(div);
+    });
+  }
+  document.getElementById('plNewName').value = '';
+  document.getElementById('plModal').classList.add('open');
+}
+
+function closePlModal() {
+  document.getElementById('plModal').classList.remove('open');
+}
+
+function plCreateAndAdd() {
+  var name = document.getElementById('plNewName').value.trim();
+  if (!name) { document.getElementById('plNewName').focus(); return; }
+  var pl = plCreatePlaylist(name);
+  var track = currentYtTrack();
+  if (track) plAddTrack(pl.id, track);
+  closePlModal();
+  showToast('Playlist "' + name + '" criada!');
+}
+
+function showToast(msg) {
+  var t = document.getElementById('mvfToast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'mvfToast';
+    t.style.cssText = 'position:absolute;bottom:90px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--sf0);border:1px solid var(--border);color:var(--t1);font-size:13px;font-weight:500;padding:9px 18px;border-radius:20px;z-index:600;opacity:0;transition:opacity .2s,transform .2s;white-space:nowrap;pointer-events:none';
+    document.querySelector('.app').appendChild(t);
+  }
+  t.textContent = msg;
+  t.style.opacity = '1'; t.style.transform = 'translateX(-50%) translateY(0)';
+  clearTimeout(t._tmr);
+  t._tmr = setTimeout(function() { t.style.opacity = '0'; t.style.transform = 'translateX(-50%) translateY(10px)'; }, 2200);
+}
+
+// ── HERO CAROUSEL ──
+(function() {
+  var slides = document.querySelectorAll('.hero-slide');
+  var dots   = document.querySelectorAll('#heroDots .hero-dot');
+  var total  = slides.length;
+  var current = 0;
+  var timer = null;
+  var dotColors = ['var(--accent)', '#187cf5', '#f5a718', '#16a085'];
+
+  function goTo(n) {
+    slides[current].classList.remove('active');
+    dots[current].classList.remove('active');
+    dots[current].style.background = '';
+    current = ((n % total) + total) % total;
+    slides[current].classList.add('active');
+    dots[current].classList.add('active');
+    dots[current].style.background = dotColors[current];
+  }
+
+  function startAuto() {
+    clearInterval(timer);
+    timer = setInterval(function() { goTo(current + 1); }, 5000);
+  }
+
+  dots.forEach(function(dot, i) {
+    dot.addEventListener('click', function() { goTo(i); startAuto(); });
+  });
+
+  var carousel = document.getElementById('heroCarousel');
+  if (carousel) {
+    carousel.addEventListener('mouseenter', function() { clearInterval(timer); });
+    carousel.addEventListener('mouseleave', startAuto);
+    var startX = 0;
+    carousel.addEventListener('touchstart', function(e) { startX = e.touches[0].clientX; }, { passive: true });
+    carousel.addEventListener('touchend', function(e) {
+      var dx = e.changedTouches[0].clientX - startX;
+      if (Math.abs(dx) > 40) { goTo(current + (dx < 0 ? 1 : -1)); startAuto(); }
+    });
+  }
+
+  dots[0].style.background = dotColors[0];
+  startAuto();
+})();
+
+// ── Background Audio / Wake Lock ──
+(function() {
+  var wakeLock = null;
+
+  // Silent audio loop — mantém o browser em "modo áudio" no background
+  var silentAudio = new Audio();
+  silentAudio.src = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
+  silentAudio.loop = true;
+  silentAudio.volume = 0.001;
+
+  function acquireWakeLock() {
+    if ('wakeLock' in navigator) {
+      navigator.wakeLock.request('screen').then(function(wl) {
+        wakeLock = wl;
+        wl.addEventListener('release', function() { wakeLock = null; });
+      }).catch(function() {});
+    }
+  }
+
+  function releaseWakeLock() {
+    if (wakeLock) { wakeLock.release().catch(function(){}); wakeLock = null; }
+  }
+
+  window._bgAudioStart = function() {
+    silentAudio.play().catch(function(){});
+    acquireWakeLock();
+  };
+
+  window._bgAudioStop = function() {
+    silentAudio.pause();
+    releaseWakeLock();
+  };
+
+  // Retoma YouTube se foi pausado pelo browser ao voltar ao app
+  document.addEventListener('visibilitychange', function() {
+    if (document.visibilityState === 'visible' && ytCurrentVideoId && isPlaying) {
+      setTimeout(function() {
+        if (ytPlayer && ytReady) {
+          try { ytPlayer.playVideo(); } catch(e) {}
+        }
+      }, 300);
+      // Reaquire wake lock (é liberado automaticamente quando a tela bloqueia)
+      acquireWakeLock();
+    }
+  });
+})();
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/sw.js');
+  });
+}
+
+// ── iOS Install Banner ──
+(function() {
+  var isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  var isInStandalone = window.navigator.standalone === true;
+  var dismissed = localStorage.getItem('iosBannerDismissed');
+  if (!isIos || isInStandalone || dismissed) return;
+
+  var banner = document.getElementById('iosBanner');
+  if (!banner) return;
+
+  setTimeout(function() { banner.classList.remove('hidden'); }, 1800);
+
+  document.getElementById('iosBannerClose').addEventListener('click', function() {
+    banner.classList.add('hidden');
+    localStorage.setItem('iosBannerDismissed', '1');
+  });
+})();
+</script>
+
