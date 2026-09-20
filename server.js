@@ -22,21 +22,24 @@ const MIME = {
 const ALLOWED = [
   'streamtheworld.com',
   'tritondigital.com',
-  'cdn.jb.fm',
-  'stream.zeno.fm',
-  'ice.fabricahost.com.br',
+  'jb.fm',
+  'zeno.fm',
+  'fabricahost.com.br',
   'brasilstream.com.br',
   'audiostream.com.br',
   'logicahost.com.br',
   'crossradio.com.br',
   'inweb.com.br',
-  'antenaone.crossradio.com.br',
   'cmaudioevideo.com',
   'transmissaodigital.com',
   'voxcast.com.br',
   'brascast.com',
   'brlogic.com',
   'svrdedicado.org',
+  'brcast.com.br',
+  'radiobras.net',
+  'azuracast.com',
+  'surfernetwork.com',
 ];
 
 function hostAllowed(hostname) {
@@ -49,7 +52,7 @@ function proxyRadio(targetUrl, clientRes, depth) {
   try { parsed = new URL(targetUrl); } catch(e) { clientRes.writeHead(400); clientRes.end('Bad URL'); return; }
 
   if (!hostAllowed(parsed.hostname)) {
-    clientRes.writeHead(403); clientRes.end('Host not allowed'); return;
+    clientRes.writeHead(403); clientRes.end('Host not allowed: ' + parsed.hostname); return;
   }
 
   var lib = parsed.protocol === 'https:' ? https : http;
@@ -96,6 +99,15 @@ function proxyRadio(targetUrl, clientRes, depth) {
 
 const server = http.createServer(function(req, res) {
   var parsed = urlMod.parse(req.url, true);
+
+  if (parsed.pathname === '/debug-host') {
+    var testUrl = parsed.query.url || '';
+    var h = '';
+    try { h = new URL(testUrl).hostname; } catch(e) { h = 'bad-url'; }
+    res.writeHead(200, {'Content-Type': 'text/plain', 'Access-Control-Allow-Origin': '*'});
+    res.end('hostname=' + h + ' allowed=' + hostAllowed(h) + ' allowed_list=' + ALLOWED.join(','));
+    return;
+  }
 
   if (parsed.pathname === '/radio-stream') {
     var target = parsed.query.url;
