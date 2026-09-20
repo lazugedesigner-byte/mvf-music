@@ -1691,14 +1691,10 @@ function playRadio(r, el) {
     });
   }
 
-  // On localhost: route streamtheworld through local Node.js proxy (bypasses referer block).
-  // On any other host (Netlify, etc.): try the stream directly — real domains are usually allowed.
-  var isLocalhost = (location.hostname === 'localhost' || location.hostname === '127.0.0.1');
+  // Always route through the Node.js proxy to bypass CORS on all radio hosts.
   var px = function(u) {
-    if (!u || !u.includes('streamtheworld.com')) return u;
-    return isLocalhost
-      ? 'http://localhost:3000/radio-stream?url=' + encodeURIComponent(u)
-      : u;
+    if (!u) return u;
+    return (window.location.origin || '') + '/radio-stream?url=' + encodeURIComponent(u);
   };
   tryStream(px(r.stream), px(r.stream2) || null);
 }

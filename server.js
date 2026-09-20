@@ -20,7 +20,7 @@ const MIME = {
 
 // Allowed upstream hosts for the radio proxy
 const ALLOWED = [
-  'streamtheworld.com',   // cobre playerservices.*, live.*, edge*.*, etc.
+  'streamtheworld.com',
   'tritondigital.com',
   'cdn.jb.fm',
   'stream.zeno.fm',
@@ -31,6 +31,12 @@ const ALLOWED = [
   'crossradio.com.br',
   'inweb.com.br',
   'antenaone.crossradio.com.br',
+  'cmaudioevideo.com',
+  'transmissaodigital.com',
+  'voxcast.com.br',
+  'brascast.com',
+  'brlogic.com',
+  'svrdedicado.org',
 ];
 
 function hostAllowed(hostname) {
